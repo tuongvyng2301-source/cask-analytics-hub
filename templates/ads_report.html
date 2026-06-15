@@ -235,8 +235,16 @@
   <h1>Weekly Marketing Report — {{ period }}</h1>
   <div class="meta">
     {% if analysis.bu %}<strong>{{ analysis.bu.label }}</strong> | Khoá: {{ analysis.bu.khoa|join(' / ') }} | {% endif %}
+    {% if analysis.date_range and analysis.date_range.start %}
+    📅 <strong>Date range: {{ analysis.date_range.start }} → {{ analysis.date_range.end }}</strong> ({{ analysis.date_range.source }}) |
+    {% endif %}
     Source: Meta Ads + FB Page posts + Sales Lead tracking
   </div>
+  {% if analysis.date_range and analysis.date_range.start %}
+  <div style="margin-top:10px; font-size:11px; opacity:0.75; background:rgba(255,255,255,0.1); padding:6px 10px; border-radius:4px;">
+    ⚠️ <strong>Verify data:</strong> So sánh số với Ads Manager phải chọn EXACT cùng range <code>{{ analysis.date_range.start }} → {{ analysis.date_range.end }}</code>. Lệch 1 ngày = số khác hoàn toàn.
+  </div>
+  {% endif %}
 </header>
 
 <!-- ============ EXECUTIVE SUMMARY ============ -->

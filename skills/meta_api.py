@@ -128,6 +128,11 @@ def fetch_ads_insights(ad_account_id: str, access_token: str,
     Args:
         ad_account_id: e.g. 'act_3022619417793545'
         start_date / end_date: 'YYYY-MM-DD'
+
+    Note:
+        - use_account_attribution_setting=true → match Ads Manager UI default
+        - action_attribution_windows = ['7d_click','1d_view'] → standard default
+        - 'clicks' field includes all clicks; use 'inline_link_clicks' for link clicks only.
     """
     if not ad_account_id.startswith("act_"):
         ad_account_id = f"act_{ad_account_id}"
@@ -136,7 +141,7 @@ def fetch_ads_insights(ad_account_id: str, access_token: str,
     fields = ",".join([
         "campaign_id", "campaign_name", "adset_id", "adset_name",
         "ad_id", "ad_name",
-        "spend", "impressions", "reach", "clicks",
+        "spend", "impressions", "reach", "clicks", "inline_link_clicks",
         "ctr", "cpc", "cpm", "frequency",
         "actions", "cost_per_action_type",
     ])
@@ -144,6 +149,8 @@ def fetch_ads_insights(ad_account_id: str, access_token: str,
         "fields": fields,
         "level": "ad",
         "time_range": f'{{"since":"{start_date}","until":"{end_date}"}}',
+        "use_account_attribution_setting": "true",
+        "action_report_time": "conversion",
         "limit": 500,
         "access_token": access_token,
     }
@@ -177,7 +184,11 @@ def insights_to_dataframe_dict(rows: list[dict]) -> list[dict]:
     for r in rows:
         spend = float(r.get("spend") or 0)
         impressions = int(float(r.get("impressions") or 0))
-        clicks = int(float(r.get("clicks") or 0))
+        # Prefer 'inline_link_clicks' (matches Ads Manager 'Link clicks' exactly)
+        # Fallback to 'clicks' (= all clicks incl. likes/comments) if not present
+        link_clicks = int(float(r.get("inline_link_clicks") or 0))
+        all_clicks = int(float(r.get("clicks") or 0))
+        clicks = link_clicks if link_clicks else all_clicks
         ctr = float(r.get("ctr") or 0)
         reach = int(float(r.get("reach") or 0))
 
@@ -187,8 +198,14 @@ def insights_to_dataframe_dict(rows: list[dict]) -> list[dict]:
         result_type = "Link clicks"
         actions = r.get("actions") or []
         cost_actions = r.get("cost_per_action_type") or []
-        # Priority: lead form > link clicks
-        action_priorities = ["lead", "leadgen.other", "onsite_conversion.lead_grouped", "offsite_conversion.fb_pixel_lead"]
+        # Priority: SPECIFIC lead types đầu tiên, broad "lead" CUỐI để tránh đếm trùng
+        # (vì "lead" trong API là metric tổng hợp = form + pixel + onsite all combined)
+        action_priorities = [
+            "onsite_conversion.lead_grouped",       # Meta Lead Form (most specific)
+            "leadgen.other",                          # Lead form variants
+            "offsite_conversion.fb_pixel_lead",     # Pixel-tracked website lead
+            # "lead" intentionally NOT here — it double-counts. Use as fallback only.
+        ]
         for ap in action_priorities:
             for a in actions:
                 if a.get("action_type") == ap:
@@ -197,6 +214,13 @@ def insights_to_dataframe_dict(rows: list[dict]) -> list[dict]:
                     break
             if results:
                 break
+        # Last resort: broad "lead" type — only if no specific lead type found
+        if not results:
+            for a in actions:
+                if a.get("action_type") == "lead":
+                    results = int(float(a.get("value") or 0))
+                    result_type = "Leads (broad)"
+                    break
         if not results:
             # Fallback: link_click
             for a in actions:

@@ -290,11 +290,29 @@ def page_home():
     api_start_date = None
     api_end_date = None
     if use_api:
-        c_d1, c_d2 = st.columns(2)
-        with c_d1:
-            api_start_date = st.date_input("Từ ngày", value=default_start, max_value=today)
-        with c_d2:
-            api_end_date = st.date_input("Đến ngày", value=today, max_value=today)
+        st.caption("⚠️ **Lưu ý**: Date range PHẢI khớp range bạn so sánh ở Ads Manager. Lệch 1 ngày = số khác.")
+        preset = st.radio(
+            "Preset date range",
+            options=["Last 7 days (Ads Manager)", "Last 14 days", "Last 30 days", "Custom"],
+            horizontal=True,
+            help="'Last 7 days (Ads Manager)' = 7 ngày trước hôm nay, KHÔNG bao gồm hôm nay — match Ads Manager UI."
+        )
+        if preset == "Last 7 days (Ads Manager)":
+            api_end_date = today - timedelta(days=1)
+            api_start_date = api_end_date - timedelta(days=6)
+        elif preset == "Last 14 days":
+            api_end_date = today - timedelta(days=1)
+            api_start_date = api_end_date - timedelta(days=13)
+        elif preset == "Last 30 days":
+            api_end_date = today - timedelta(days=1)
+            api_start_date = api_end_date - timedelta(days=29)
+        else:
+            c_d1, c_d2 = st.columns(2)
+            with c_d1:
+                api_start_date = st.date_input("Từ ngày", value=default_start, max_value=today)
+            with c_d2:
+                api_end_date = st.date_input("Đến ngày", value=today - timedelta(days=1), max_value=today)
+        st.info(f"📅 Date range API sẽ fetch: **{api_start_date} → {api_end_date}** ({(api_end_date - api_start_date).days + 1} ngày)")
     else:
         ads_file = st.file_uploader("📊 Ads CSV (Meta Ads Manager)", type=["csv"], key="ads_csv")
 
@@ -569,6 +587,10 @@ def page_home():
                 st.warning(f"Lỗi parse Lead Tracking (bỏ qua lead quality): {e}")
         analysis["leads"] = lead_data
         analysis["bu"] = {"code": bu_choice, "label": BU_CONFIG[bu_choice]["label"], "khoa": focus_khoa}
+        if use_api:
+            analysis["date_range"] = {"start": str(api_start_date), "end": str(api_end_date), "source": "Meta API"}
+        else:
+            analysis["date_range"] = {"source": "CSV upload"}
 
         with st.spinner("Đang generate report..."):
             html = render_ads_report(analysis, period_label, template_dir=TEMPLATES_DIR)
