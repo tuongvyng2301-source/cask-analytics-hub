@@ -214,15 +214,11 @@ def insights_to_dataframe_dict(rows: list[dict]) -> list[dict]:
                     break
             if results:
                 break
-        # Last resort: broad "lead" type — only if no specific lead type found
+        # KHÔNG fallback "lead" (broad) — đó là metric aggregate Meta cộng dồn
+        # multiple lead types → inflate count. Nếu không tìm thấy specific type
+        # → ad đó không phải lead form → results = 0.
         if not results:
-            for a in actions:
-                if a.get("action_type") == "lead":
-                    results = int(float(a.get("value") or 0))
-                    result_type = "Leads (broad)"
-                    break
-        if not results:
-            # Fallback: link_click
+            # Fallback: link_click (cho cold lead ad đang optimize link clicks)
             for a in actions:
                 if a.get("action_type") == "link_click":
                     results = int(float(a.get("value") or 0))

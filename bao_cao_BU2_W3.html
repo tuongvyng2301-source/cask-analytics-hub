@@ -1,0 +1,449 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CASK BU2 — Báo cáo W3 (08–14/06/2026)</title>
+<style>
+*{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#f4f6f8;color:#1a2027;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:24px}
+h1{font-size:24px;margin:0 0 4px}h2{font-size:19px;margin:30px 0 12px;padding-bottom:6px;border-bottom:2px solid #e0e0e0}
+h3{font-size:16px;margin:18px 0 8px}
+.sub{color:#5f6b7a;font-size:13px;margin-bottom:16px}
+.note{background:#fff8e1;border-left:4px solid #f59f00;padding:10px 14px;font-size:13px;border-radius:4px;margin:12px 0}
+.warn{background:#fdecea;border-left:4px solid #c0392b;padding:10px 14px;font-size:13px;border-radius:4px;margin:12px 0}
+.src{background:#eef4ff;border-left:4px solid #1565c0;padding:9px 13px;font-size:12px;border-radius:4px;margin:10px 0;color:#34495e}
+table{border-collapse:collapse;width:100%;background:#fff;font-size:13px;margin:8px 0;border-radius:6px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid #eef1f4}
+th:first-child,td:first-child{text-align:left}
+th{background:#2d3748;color:#fff;font-weight:600;font-size:12px}
+tr:hover td{background:#f9fafb}
+.khoa-sec{background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.1);margin:16px 0;border-top:5px solid #ccc}
+.kbadge{display:inline-block;color:#fff;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+.kpi{background:#f7f9fb;border-radius:8px;padding:12px}
+.kpi .v{font-size:20px;font-weight:700}.kpi .l{font-size:11px;color:#5f6b7a}
+.muted{color:#9aa5b1}.small{font-size:12px}
+code{background:#eef1f4;padding:1px 5px;border-radius:3px;font-size:12px}
+/* funnel */
+.funnel{margin:14px 0}
+.fstage{display:flex;align-items:center;gap:12px;margin:3px 0}
+.fbar-wrap{flex:1;background:#f0f2f5;border-radius:4px;overflow:hidden;height:34px;position:relative}
+.fbar{height:100%;display:flex;align-items:center;padding-left:10px;color:#fff;font-weight:600;font-size:13px;white-space:nowrap;min-width:60px}
+.flabel{width:165px;font-size:12px;text-align:right;color:#34495e}
+.fconv{width:120px;font-size:11px;color:#5f6b7a}
+.fconv b{color:#1a2027}
+.bridge{font-size:11px;color:#c0392b;margin:2px 0 2px 177px;font-style:italic}
+</style></head><body><div class="wrap">
+<h1>CASK — Báo cáo Paid Ads BU2 theo khoá</h1>
+<div class="sub">Kỳ: <b>W3 — 08 đến 14/06/2026</b> · Funnel MKT: Hiển thị → Click → Form lead → Lead ghi nhận → Deal → Won · Chỉ đọc số từ file thô</div>
+
+<div class="warn"><b>⚠️ Lưu ý nguồn dữ liệu (đọc trước):</b><ul style="margin:6px 0 0;padding-left:20px">
+<li>Funnel ghép 2 nguồn: <b>tầng 1–3 từ Meta ads</b> (Vy.csv), <b>tầng 4–6 từ sheet sales</b> (leads-Sheet2). Chỗ chuyển nguồn được đánh dấu — không phải chuyển đổi 1-1.</li>
+<li>Sheet ghi nhãn "Tuần 2" nhưng <b>ngày thực 8–14/6/26</b> → khớp đúng kỳ ads W3.</li>
+<li>Cột <code>Kết quả cuối</code>, <code>Ads</code> trong sheet <b>rỗng 100%</b>. Won/Deal lấy từ <code>Lead Status</code>. <b>Won BU2 = 0</b> tuần này.</li>
+</ul></div>
+
+<h2>Tổng quan BU2</h2>
+<div class="grid">
+<div class="kpi"><div class="v">4.92Mđ</div><div class="l">Tổng chi (Hot+Cold)</div></div>
+<div class="kpi"><div class="v">91,472</div><div class="l">Impressions</div></div>
+<div class="kpi"><div class="v">946</div><div class="l">Link clicks</div></div>
+<div class="kpi"><div class="v">13</div><div class="l">Form lead (Meta)</div></div>
+<div class="kpi"><div class="v">27</div><div class="l">Lead ghi nhận (sheet)</div></div>
+<div class="kpi"><div class="v">3 / 0</div><div class="l">Deal / Won</div></div>
+</div>
+<h2>Funnel theo từng khoá</h2>
+<div class="khoa-sec" style="border-top-color:#2e7d32">
+<h3><span class="kbadge" style="background:#2e7d32">Trade</span> &nbsp;<span class="small muted">15 ads · chi 2.77Mđ</span></h3>
+<div class="grid">
+<div class="kpi"><div class="v">0.69%</div><div class="l">CTR Hot</div></div>
+<div class="kpi"><div class="v">587Kđ</div><div class="l">CPL (chi/form lead Meta)</div></div>
+<div class="kpi"><div class="v">252Kđ</div><div class="l">Chi / lead ghi nhận</div></div>
+<div class="kpi"><div class="v">2</div><div class="l">Deal (đang đàm phán)</div></div>
+</div>
+<div class="funnel">
+<div class="fstage">
+<div class="flabel">Impressions</div>
+<div class="fbar-wrap"><div class="fbar" style="width:100.0%;background:#2e7d32">57,058</div></div>
+<div class="fconv"><b>100%</b> (đầu phễu)</div></div>
+<div class="fstage">
+<div class="flabel">Link clicks</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#2e7d32">535</div></div>
+<div class="fconv">→ <b>0.9%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Form lead (Meta)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#2e7d32">4</div></div>
+<div class="fconv">→ <b>0.7%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Lead ghi nhận (sheet)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#7f8c8d">11</div></div>
+<div class="fconv">→ <b>275.0%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Deal (đàm phán)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#7f8c8d">2</div></div>
+<div class="fconv">→ <b>18.2%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Won (chốt)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#7f8c8d">0</div></div>
+<div class="fconv">→ <b>0.0%</b> từ tầng trên</div></div>
+</div>
+<div class="bridge">↑ Tầng 4–6 chuyển sang nguồn Sheet sales (gồm cả lead organic/web, không chỉ từ ad) → tỉ lệ "Form lead → Lead ghi nhận" có thể >100%.</div>
+<table>
+<tr><th>Loại</th><th>Ads</th><th>Chi</th><th>Impr</th><th>Clicks</th><th>CTR</th><th>CPC</th><th>Form lead</th><th>Click→Lead</th><th>CPL</th></tr>
+<tr><td><b>Hot</b> (lead form)</td><td>14</td><td>2.35M</td><td>38,030</td><td>263</td><td>0.69%</td><td>9K</td><td>4</td><td>1.52%</td><td>587K</td></tr>
+<tr><td><b>Cold</b> (content)</td><td>1</td><td>420K</td><td>19,028</td><td>272</td><td>1.43%</td><td>2K</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>
+</table>
+<div class="src"><b>Số đâu ra (Trade):</b>
+Impr/Clicks/Form lead/CTR/Chi = Σ các cột tương ứng trong <code>Vy.csv</code> của ad khoá Trade (Hot: campaign chứa "Trade…"; Cold: <code>BU 2 | COLD LEAD</code> + ad set = Trade).
+Lead ghi nhận = 11 dòng trong <code>leads-Sheet2.csv</code> có Product→Trade (Fb Form 9 · Organic/Web 2).
+Deal = 2, Won = 0 (đếm <code>Lead Status</code>).</div>
+</div>
+<div class="khoa-sec" style="border-top-color:#f59f00">
+<h3><span class="kbadge" style="background:#f59f00">RTM</span> &nbsp;<span class="small muted">7 ads · chi 1.02Mđ</span></h3>
+<div class="grid">
+<div class="kpi"><div class="v">0.66%</div><div class="l">CTR Hot</div></div>
+<div class="kpi"><div class="v">198Kđ</div><div class="l">CPL (chi/form lead Meta)</div></div>
+<div class="kpi"><div class="v">102Kđ</div><div class="l">Chi / lead ghi nhận</div></div>
+<div class="kpi"><div class="v">0</div><div class="l">Deal (đang đàm phán)</div></div>
+</div>
+<div class="funnel">
+<div class="fstage">
+<div class="flabel">Impressions</div>
+<div class="fbar-wrap"><div class="fbar" style="width:100.0%;background:#f59f00">19,907</div></div>
+<div class="fconv"><b>100%</b> (đầu phễu)</div></div>
+<div class="fstage">
+<div class="flabel">Link clicks</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#f59f00">195</div></div>
+<div class="fconv">→ <b>1.0%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Form lead (Meta)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#f59f00">5</div></div>
+<div class="fconv">→ <b>2.6%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Lead ghi nhận (sheet)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#7f8c8d">10</div></div>
+<div class="fconv">→ <b>200.0%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Deal (đàm phán)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#7f8c8d">0</div></div>
+<div class="fconv">→ <b>0.0%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Won (chốt)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#7f8c8d">0</div></div>
+<div class="fconv">→ <b>—</b> từ tầng trên</div></div>
+</div>
+<div class="bridge">↑ Tầng 4–6 chuyển sang nguồn Sheet sales (gồm cả lead organic/web, không chỉ từ ad) → tỉ lệ "Form lead → Lead ghi nhận" có thể >100%.</div>
+<table>
+<tr><th>Loại</th><th>Ads</th><th>Chi</th><th>Impr</th><th>Clicks</th><th>CTR</th><th>CPC</th><th>Form lead</th><th>Click→Lead</th><th>CPL</th></tr>
+<tr><td><b>Hot</b> (lead form)</td><td>6</td><td>989K</td><td>17,969</td><td>119</td><td>0.66%</td><td>8K</td><td>5</td><td>4.20%</td><td>198K</td></tr>
+<tr><td><b>Cold</b> (content)</td><td>1</td><td>31K</td><td>1,938</td><td>76</td><td>3.92%</td><td>413</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>
+</table>
+<div class="src"><b>Số đâu ra (RTM):</b>
+Impr/Clicks/Form lead/CTR/Chi = Σ các cột tương ứng trong <code>Vy.csv</code> của ad khoá RTM (Hot: campaign chứa "RTM…"; Cold: <code>BU 2 | COLD LEAD</code> + ad set = RTM).
+Lead ghi nhận = 10 dòng trong <code>leads-Sheet2.csv</code> có Product→RTM (Fb Form 8 · Organic/Web 2).
+Deal = 0, Won = 0 (đếm <code>Lead Status</code>).</div>
+</div>
+<div class="khoa-sec" style="border-top-color:#1565c0">
+<h3><span class="kbadge" style="background:#1565c0">Data</span> &nbsp;<span class="small muted">13 ads · chi 1.13Mđ</span></h3>
+<div class="grid">
+<div class="kpi"><div class="v">1.20%</div><div class="l">CTR Hot</div></div>
+<div class="kpi"><div class="v">274Kđ</div><div class="l">CPL (chi/form lead Meta)</div></div>
+<div class="kpi"><div class="v">189Kđ</div><div class="l">Chi / lead ghi nhận</div></div>
+<div class="kpi"><div class="v">1</div><div class="l">Deal (đang đàm phán)</div></div>
+</div>
+<div class="funnel">
+<div class="fstage">
+<div class="flabel">Impressions</div>
+<div class="fbar-wrap"><div class="fbar" style="width:100.0%;background:#1565c0">14,507</div></div>
+<div class="fconv"><b>100%</b> (đầu phễu)</div></div>
+<div class="fstage">
+<div class="flabel">Link clicks</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#1565c0">216</div></div>
+<div class="fconv">→ <b>1.5%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Form lead (Meta)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#1565c0">4</div></div>
+<div class="fconv">→ <b>1.9%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Lead ghi nhận (sheet)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#7f8c8d">6</div></div>
+<div class="fconv">→ <b>150.0%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Deal (đàm phán)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#7f8c8d">1</div></div>
+<div class="fconv">→ <b>16.7%</b> từ tầng trên</div></div>
+<div class="fstage">
+<div class="flabel">Won (chốt)</div>
+<div class="fbar-wrap"><div class="fbar" style="width:4.0%;background:#7f8c8d">0</div></div>
+<div class="fconv">→ <b>0.0%</b> từ tầng trên</div></div>
+</div>
+<div class="bridge">↑ Tầng 4–6 chuyển sang nguồn Sheet sales (gồm cả lead organic/web, không chỉ từ ad) → tỉ lệ "Form lead → Lead ghi nhận" có thể >100%.</div>
+<table>
+<tr><th>Loại</th><th>Ads</th><th>Chi</th><th>Impr</th><th>Clicks</th><th>CTR</th><th>CPC</th><th>Form lead</th><th>Click→Lead</th><th>CPL</th></tr>
+<tr><td><b>Hot</b> (lead form)</td><td>11</td><td>1.10M</td><td>13,236</td><td>159</td><td>1.20%</td><td>7K</td><td>4</td><td>2.52%</td><td>274K</td></tr>
+<tr><td><b>Cold</b> (content)</td><td>2</td><td>34K</td><td>1,271</td><td>57</td><td>4.48%</td><td>588</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>
+</table>
+<div class="src"><b>Số đâu ra (Data):</b>
+Impr/Clicks/Form lead/CTR/Chi = Σ các cột tương ứng trong <code>Vy.csv</code> của ad khoá Data (Hot: campaign chứa "Data…"; Cold: <code>BU 2 | COLD LEAD</code> + ad set = Data).
+Lead ghi nhận = 6 dòng trong <code>leads-Sheet2.csv</code> có Product→Data (Fb Form 5 · Organic/Web 0 · khác 1).
+Deal = 1, Won = 0 (đếm <code>Lead Status</code>).</div>
+</div>
+<h2>Phụ lục — chi tiết từng ad BU2 (audit phân loại)</h2>
+<div class="note">Mọi ad được tính vào BU2, sắp theo chi tiêu giảm dần — để verify phân loại.</div>
+<table>
+<tr><th>Khoá</th><th>F</th><th>Campaign</th><th>Ad name</th><th>Chi</th><th>Impr</th><th>Clicks</th><th>CTR</th><th>Leads</th><th>CPL</th><th>Cảnh báo</th></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">TRADE 32 | Lead Form | 150526 (Pho</td><td class="small">Sales chuyển qua Trade</td>
+<td>712K</td><td>11,832</td><td>56</td><td>0.92%</td>
+<td>1</td><td>712K</td>
+<td class="small" style="color:#c0392b">CTR thấp</td></tr>
+<tr><td><span class="kbadge" style="background:#f59f00">RTM</span></td>
+<td>H</td><td class="small">RTM 09 | Lead Form | 220426</td><td class="small">Sales sup -&gt;ASM</td>
+<td>658K</td><td>12,740</td><td>75</td><td>1.33%</td>
+<td>5</td><td>132K</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">Trade 30 | Lead Form | 081025 (Vid</td><td class="small">Shelfzone: Anh Nhân</td>
+<td>538K</td><td>13,412</td><td>91</td><td>1.19%</td>
+<td>2</td><td>269K</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">Trade Data | Lead Form | 050426</td><td class="small">Anh Chương | Sell-out</td>
+<td>474K</td><td>5,402</td><td>96</td><td>2.63%</td>
+<td>3</td><td>158K</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">Trade 32 | Video Lead Form | 22042</td><td class="small">Distribution vs Stock</td>
+<td>442K</td><td>3,973</td><td>54</td><td>2.11%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b">đốt-ko-lead</td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>C</td><td class="small">BU 2 | COLD LEAD | 190526</td><td class="small">Ebook Trade CAT</td>
+<td>420K</td><td>19,028</td><td>272</td><td>2.70%</td>
+<td>—</td><td>2K</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">DATA | Lead form | 100626</td><td class="small">Testi học viên nhiều cty</td>
+<td>291K</td><td>4,499</td><td>38</td><td>1.02%</td>
+<td>1</td><td>291K</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#f59f00">RTM</span></td>
+<td>H</td><td class="small">RTM | LEAD FORM | 120626</td><td class="small">Review anh Lân</td>
+<td>241K</td><td>3,634</td><td>35</td><td>2.04%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b">đốt-ko-lead</td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">Trade 32 | Video Lead Form | 22042</td><td class="small">MS thấp, SOS cao | Anh Khoa</td>
+<td>235K</td><td>2,235</td><td>20</td><td>1.97%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b">đốt-ko-lead</td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">Trade 32 | Video Lead Form | 22042</td><td class="small">Promotion trade-in | Anh Khoa</td>
+<td>139K</td><td>1,370</td><td>20</td><td>1.97%</td>
+<td>1</td><td>139K</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">Trade Data | Lead Form | 050426</td><td class="small">Chị Linh: Chiết khấu KM</td>
+<td>99K</td><td>763</td><td>5</td><td>1.31%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b">đốt-ko-lead</td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">DATA | Lead form | 100626</td><td class="small">Expert info</td>
+<td>68K</td><td>960</td><td>10</td><td>2.92%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b">đốt-ko-lead</td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">DATA | Lead form | 100626</td><td class="small">GTKH: 8 MODULE</td>
+<td>63K</td><td>618</td><td>2</td><td>0.32%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b">đốt-ko-lead</td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">TRADE 32 | Lead Form | 150526 (Pho</td><td class="small">Giới hạn sự nghiệp</td>
+<td>57K</td><td>1,145</td><td>1</td><td>1.05%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b">đốt-ko-lead</td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">Trade 32 | Video Lead Form | 22042</td><td class="small">POSM | Anh Nhân</td>
+<td>51K</td><td>451</td><td>5</td><td>2.00%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b">đốt-ko-lead</td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">Trade Data | Lead Form | 050426</td><td class="small">Video: 15 phút mua sắm</td>
+<td>48K</td><td>500</td><td>7</td><td>1.80%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">TRADE 32 | Lead Form | 150526 (Pho</td><td class="small">Painpoint: Trade Plan</td>
+<td>43K</td><td>596</td><td>3</td><td>0.50%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">Trade 30 | Lead Form | 081025 (Vid</td><td class="small">Sales chuyển qua Trade – Copy</td>
+<td>41K</td><td>1,020</td><td>3</td><td>0.78%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b">CTR thấp</td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">Trade 30 | Lead Form | 081025 (Vid</td><td class="small">Testi học viên nhiều cty</td>
+<td>40K</td><td>969</td><td>5</td><td>0.83%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#f59f00">RTM</span></td>
+<td>H</td><td class="small">RTM 09 | Lead Form | 220426</td><td class="small">Agenda khóa học</td>
+<td>39K</td><td>859</td><td>5</td><td>1.28%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#f59f00">RTM</span></td>
+<td>H</td><td class="small">RTM | LEAD FORM | 120626</td><td class="small">Tốt nghiệp RTM 08</td>
+<td>36K</td><td>389</td><td>0</td><td>4.63%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">Trade Data | Lead Form | 050426</td><td class="small">Video: Rate of Sale - Anh Nhân</td>
+<td>34K</td><td>297</td><td>1</td><td>2.02%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>C</td><td class="small">BU 2 | COLD LEAD | 190526</td><td class="small">Sell-out - từ điển thuật ngữ</td>
+<td>33K</td><td>1,249</td><td>57</td><td>5.52%</td>
+<td>—</td><td>582</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">TRADE 32 | Lead Form | 150526 (Pho</td><td class="small">Exec to Manager | 14 năng lực</td>
+<td>32K</td><td>593</td><td>2</td><td>1.18%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#f59f00">RTM</span></td>
+<td>C</td><td class="small">BU 2 | COLD LEAD | 190526</td><td class="small">Cheatsheet</td>
+<td>31K</td><td>1,938</td><td>76</td><td>5.26%</td>
+<td>—</td><td>413</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#f59f00">RTM</span></td>
+<td>H</td><td class="small">RTM 09 | Lead Form | 220426</td><td class="small">Banner khóa học</td>
+<td>15K</td><td>341</td><td>3</td><td>2.05%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">Trade Data | Lead Form | 050426</td><td class="small">Testi chị Bảo Hân | Video</td>
+<td>15K</td><td>133</td><td>0</td><td>1.50%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">Trade 30 | Lead Form | 081025 (Vid</td><td class="small">Product #2: Banner GTKH</td>
+<td>12K</td><td>348</td><td>3</td><td>0.86%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">Trade Data | Lead Form | 050426</td><td class="small">Anh Nhân - Clip khả năng bán</td>
+<td>3K</td><td>26</td><td>0</td><td>0.00%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">TRADE 32 | Lead Form | 150526 (Pho</td><td class="small">AI không thể thay thế</td>
+<td>2K</td><td>35</td><td>0</td><td>0.00%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#2e7d32">Trade</span></td>
+<td>H</td><td class="small">TRADE 32 | Lead Form | 150526 (Pho</td><td class="small">AI vs Trade mkters</td>
+<td>2K</td><td>51</td><td>0</td><td>0.00%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">DATA | Lead form | 100626</td><td class="small">Tài liệu sau khoá học</td>
+<td>1K</td><td>29</td><td>0</td><td>0.00%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#f59f00">RTM</span></td>
+<td>H</td><td class="small">RTM 09 | Lead Form | 220426</td><td class="small">Product: Carousel – Copy</td>
+<td>690</td><td>6</td><td>1</td><td>33.33%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>C</td><td class="small">BU 2 | COLD LEAD | 190526</td><td class="small">Trade Data Analytics ver 2.0</td>
+<td>314</td><td>22</td><td>0</td><td>0.00%</td>
+<td>—</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+<tr><td><span class="kbadge" style="background:#1565c0">Data</span></td>
+<td>H</td><td class="small">DATA | Lead form | 100626</td><td class="small">Kết khoá DATA 03</td>
+<td>291</td><td>9</td><td>0</td><td>0.00%</td>
+<td>0</td><td>—</td>
+<td class="small" style="color:#c0392b"></td></tr>
+</table>
+<h2>Organic (post) — page CASK, W3</h2>
+<div class="grid">
+<div class="kpi"><div class="v">21</div><div class="l">Số post</div></div>
+<div class="kpi"><div class="v">19,251</div><div class="l">Tổng Reach</div></div>
+<div class="kpi"><div class="v">30,257</div><div class="l">Tổng Views</div></div>
+<div class="kpi"><div class="v">331</div><div class="l">Tương tác (R+C+S)</div></div>
+</div>
+<div class="note">Post <b>không có nhãn khoá</b> → cột "Khoá (suy luận)" chỉ đoán theo từ khoá tiêu đề. Phần lớn post chủ đề chung, không riêng BU2.</div>
+<div class="src">Số đâu ra: Σ <code>Reach</code>/<code>Views</code>/<code>Reactions</code>+<code>Comments</code>+<code>Shares</code> của 21 post trong file organic W3. Tổng Link Clicks = 11.</div>
+<table>
+<tr><th>Ngày</th><th>Loại</th><th>Khoá (suy luận)</th><th>Reach</th><th>Views</th><th>React</th><th>Cmt</th><th>Share</th><th>Tiêu đề</th></tr>
+<tr><td>06/11/2026</td><td>Photos</td><td class="small muted">RTM</td>
+<td>2,788</td><td>4,277</td><td>22</td><td>4</td><td>12</td>
+<td class="small">🏪 83% doanh thu bán lẻ thực phẩm tại Việt Nam vẫn chảy </td></tr>
+<tr><td>06/11/2026</td><td>Videos</td><td class="small muted">Trade</td>
+<td>1,938</td><td>2,539</td><td>6</td><td>2</td><td>2</td>
+<td class="small">Cùng một ngành hàng. Nhưng không phải phân khúc sản phẩ</td></tr>
+<tr><td>06/10/2026</td><td>Photos</td><td class="small muted">RTM</td>
+<td>1,330</td><td>2,189</td><td>9</td><td>2</td><td>12</td>
+<td class="small">RTM không phải logistics.❌ RTM là chiến lược quyết định</td></tr>
+<tr><td>06/10/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>1,140</td><td>2,000</td><td>7</td><td>2</td><td>15</td>
+<td class="small">Phí sàn tăng từ 4% lên 10%, gần 88.000 shop rời Shopee </td></tr>
+<tr><td>06/08/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>1,027</td><td>1,629</td><td>3</td><td>2</td><td>6</td>
+<td class="small">Mỗi ngày, một Buyer gạt đi phần lớn đề xuất của nhà cun</td></tr>
+<tr><td>06/11/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>1,008</td><td>1,607</td><td>6</td><td>3</td><td>9</td>
+<td class="small">Nhiều người nghĩ KAM là sales phụ trách khách lớn, và c</td></tr>
+<tr><td>06/10/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>987</td><td>1,637</td><td>13</td><td>6</td><td>9</td>
+<td class="small">Top-down vs Bottom-up
+Vì sao mỗi mùa AOP lại trở thành </td></tr>
+<tr><td>06/09/2026</td><td>Videos</td><td class="small muted">Trade</td>
+<td>950</td><td>1,363</td><td>7</td><td>0</td><td>0</td>
+<td class="small">💸 BÁN NGÀN ĐƠN MÀ CUỐI THÁNG VẪN ÂM VỐN: TỬ HUYỆT &quot;CHI </td></tr>
+<tr><td>06/10/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>923</td><td>1,491</td><td>9</td><td>3</td><td>5</td>
+<td class="small">7 phòng ban, 7 góc nhìn
+Ai đang thực sự quyết định chất</td></tr>
+<tr><td>06/13/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>855</td><td>1,253</td><td>3</td><td>4</td><td>8</td>
+<td class="small">Doanh thu tăng không đồng nghĩa doanh nghiệp đang tốt l</td></tr>
+<tr><td>06/11/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>823</td><td>1,258</td><td>5</td><td>2</td><td>5</td>
+<td class="small">Người từng làm Buyer đã có sẵn thứ khó nhất của nghề KA</td></tr>
+<tr><td>06/09/2026</td><td>Videos</td><td class="small muted">Trade</td>
+<td>785</td><td>1,097</td><td>2</td><td>1</td><td>1</td>
+<td class="small">[JBP HAY CHỈ LÀ PITCHING?] RETAILER GẬT ĐẦU Khen HAY, N</td></tr>
+<tr><td>06/14/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>717</td><td>1,106</td><td>3</td><td>3</td><td>6</td>
+<td class="small">Trong E-commerce, SKU tạo nhiều GMV nhất chưa chắc là S</td></tr>
+<tr><td>06/12/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>704</td><td>1,178</td><td>9</td><td>6</td><td>5</td>
+<td class="small">Lợi nhuận không phải là tiền. Thứ quyết định doanh nghi</td></tr>
+<tr><td>06/12/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>587</td><td>934</td><td>8</td><td>13</td><td>8</td>
+<td class="small">Mỗi con số trên Báo Cáo Tài Chính đều đang kể một câu c</td></tr>
+<tr><td>06/13/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>584</td><td>927</td><td>4</td><td>3</td><td>4</td>
+<td class="small">🔥 [FREE PDF] Bộ 17 Template Quản trị Khách hàng trọng đ</td></tr>
+<tr><td>06/11/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>539</td><td>942</td><td>2</td><td>3</td><td>7</td>
+<td class="small">Nhiều shop tối ưu giá, đầu tư hình ảnh, cải thiện sản p</td></tr>
+<tr><td>06/09/2026</td><td>Photos</td><td class="small muted">RTM</td>
+<td>533</td><td>1,049</td><td>13</td><td>1</td><td>2</td>
+<td class="small">🎉 [CHÚC MỪNG LỚP DATA-DRIVEN TRADE MARKETING EXCELLENCE</td></tr>
+<tr><td>06/09/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>395</td><td>809</td><td>4</td><td>3</td><td>0</td>
+<td class="small">[KHAI GIẢNG LỚP THE JOURNEY OF BRAND BUILDING KHÓA 34]
+</td></tr>
+<tr><td>06/08/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>338</td><td>584</td><td>4</td><td>1</td><td>1</td>
+<td class="small">[PRE-ORDER] Ưu đãi 20% khi đăng ký sớm khóa Annual Oper</td></tr>
+<tr><td>06/14/2026</td><td>Photos</td><td class="small muted">—</td>
+<td>300</td><td>388</td><td>9</td><td>2</td><td>0</td>
+<td class="small">[FREE DOWNLOAD] EBOOK &quot;QUY TRÌNH 7 BƯỚC AOP&quot;
+&gt;&gt; Đăng ký</td></tr>
+</table>
+<div class="sub" style="margin-top:32px">Báo cáo tạo tự động từ file thô · Mọi số truy ngược được về cột nguồn ghi trong các ô "Số đâu ra".</div>
+</div></body></html>

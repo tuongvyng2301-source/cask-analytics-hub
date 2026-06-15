@@ -51,9 +51,18 @@ def categorize_ad(campaign: str, adset: str) -> str | None:
         return None
 
     # Hotlead — match campaign name to khoá
+    # Data Hot — CHECK TRƯỚC Trade Hot vì "Trade Data" có "Trade" trong tên
+    if "TRADE DATA" in campaign_up or campaign_up.startswith("DATA "):
+        return "Data Hot"
+    if "DATA" in campaign_up and ("LEAD" in campaign_up or "FORM" in campaign_up):
+        return "Data Hot"
+    # Trade Hot — match "TRADE X" (digit) hoặc "TRADE 30/31/32"
     if re.search(r"\bTRADE\s+\d", campaign_up):
         return "Trade Hot"
+    # RTM Hot — match cả "RTM 09" pattern cũ lẫn "RTM | LEAD FORM | ..." pattern mới
     if re.search(r"\bRTM\s+\d", campaign_up):
+        return "RTM Hot"
+    if "RTM" in campaign_up and ("LEAD" in campaign_up or "FORM" in campaign_up):
         return "RTM Hot"
     if "KAM" in campaign_up and ("LEAD" in campaign_up or "FORM" in campaign_up):
         return "KAM Hot"
