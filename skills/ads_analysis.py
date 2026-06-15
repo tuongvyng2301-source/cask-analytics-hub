@@ -249,38 +249,39 @@ def analyze_ads(df: pd.DataFrame, actuals: dict | None = None, focus_khoa: list[
         hot_cpl_image = (hot.get("total_spent", 0) / hot_social) if hot_social else 0
         hot_click_to_lead = (hot_social / hot.get("total_clicks", 0) * 100) if hot.get("total_clicks") else 0
 
-        # ====== SINGLE SOURCE OF TRUTH cho leads ======
-        # CSV form leads từ Meta API + user actual input
+        # ====== SOURCE OF TRUTH ======
+        # USER INPUT là truth (qualified form leads, đã filter junk/duplicate).
+        # CSV (Meta API) chỉ là raw count tham chiếu — có thể đếm trùng do attribution
+        # window, bot leads, hoặc form abandonment được track.
         csv_form_hot = int(hot.get("total_results", 0) or 0)
-        # Quy tắc:
-        #   - Nếu user input > 0 và CSV > 0: pick MAX, label rõ breakdown
-        #   - Else: dùng nguồn nào có data
-        if hot_social > 0 and csv_form_hot > 0:
-            if hot_social >= csv_form_hot:
-                total_hot_leads = hot_social
-                leads_source = "user_actual"
-                leads_breakdown = f"{csv_form_hot} form (Meta API) + {hot_social - csv_form_hot} inbox/DM (user tracked)"
-                source_mismatch = False
-            else:
-                # CSV > user input → mismatch nghi vấn
-                total_hot_leads = csv_form_hot  # trust API
-                leads_source = "csv_higher_than_actual"
-                leads_breakdown = f"{csv_form_hot} form (Meta API) · {hot_social} user tracked — lệch {csv_form_hot - hot_social}"
-                source_mismatch = True
-        elif hot_social > 0:
+
+        if hot_social > 0:
+            # Trust user input
             total_hot_leads = hot_social
             leads_source = "user_actual"
-            leads_breakdown = f"{hot_social} user tracked (Meta API không có data form leads)"
-            source_mismatch = False
+            if csv_form_hot > 0:
+                if csv_form_hot > hot_social * 1.2:  # CSV cao hơn user >20%
+                    leads_breakdown = f"User tracked: {hot_social} qualified form (TRUTH) · Meta API raw: {csv_form_hot} (lệch +{csv_form_hot - hot_social} — có thể attribution rộng / đếm trùng / bot)"
+                    source_mismatch = True
+                elif hot_social > csv_form_hot * 1.2:  # User cao hơn CSV >20%
+                    leads_breakdown = f"User tracked: {hot_social} (TRUTH — gồm cả inbox/DM beyond form) · Meta API form only: {csv_form_hot}"
+                    source_mismatch = False
+                else:
+                    leads_breakdown = f"User tracked: {hot_social} qualified form (TRUTH) · Meta API raw: {csv_form_hot}"
+                    source_mismatch = False
+            else:
+                leads_breakdown = f"User tracked: {hot_social} (Meta API không có form data cho category này)"
+                source_mismatch = False
         elif csv_form_hot > 0:
+            # User chưa input → fallback CSV
             total_hot_leads = csv_form_hot
-            leads_source = "csv"
-            leads_breakdown = f"{csv_form_hot} form (Meta API, user chưa nhập actual)"
+            leads_source = "csv_fallback"
+            leads_breakdown = f"Meta API raw: {csv_form_hot} form (User chưa nhập actual — số này có thể bao gồm đếm trùng)"
             source_mismatch = False
         else:
             total_hot_leads = 0
             leads_source = "none"
-            leads_breakdown = "Chưa có data"
+            leads_breakdown = "Chưa có data — nhập số form leads thực tế ở expander Actuals"
             source_mismatch = False
 
         # Recompute downstream metrics CONSISTENTLY
@@ -387,10 +388,10 @@ def analyze_ads(df: pd.DataFrame, actuals: dict | None = None, focus_khoa: list[
                     "pitfall": "Nếu CR > 10%, kiểm tra xem có gộp nhầm leads ngoài Meta Lead Form không.",
                 },
                 "total_leads_hot": {
-                    "formula": "MAX(CSV form leads, User actual input) — pick source có data lớn hơn",
+                    "formula": "USER INPUT làm TRUTH (qualified form leads, đã filter junk/dup). CSV chỉ tham chiếu.",
                     "source": leads_source,
                     "raw": leads_breakdown,
-                    "pitfall": "Nếu CSV > User actual nhiều (>20%), có thể API đếm leads từ ad ngoài focus BU. Check categorize.",
+                    "pitfall": "User count CHỈ form fills (không Messenger). Meta API raw (CSV) thường cao hơn vì: attribution window rộng, đếm trùng form abandonment, bot lead.",
                 },
                 "cpl_hot": {
                     "formula": "Spent / Total Hot Leads",
