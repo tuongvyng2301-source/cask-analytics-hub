@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Ads Analysis — W1 (1-7/6/2026)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: #f5f7f5; color: #1a2e1f; line-height: 1.6; padding: 32px 24px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  header {
+    background: linear-gradient(135deg, #2d5a3d 0%, #1f4029 100%);
+    color: white; padding: 32px; border-radius: 12px; margin-bottom: 24px;
+  }
+  header h1 { font-size: 26px; margin-bottom: 8px; }
+  header .meta { font-size: 14px; opacity: 0.85; }
+  section {
+    background: white; border-radius: 12px; padding: 28px;
+    margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  section h2 {
+    font-size: 22px; color: #2d5a3d; border-bottom: 3px solid #2d5a3d;
+    padding-bottom: 8px; margin-bottom: 20px;
+  }
+  section h3 { font-size: 17px; color: #1a2e1f; margin: 20px 0 10px; }
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .card { border-radius: 10px; padding: 18px; border-left: 5px solid; }
+  .card.good { background: #e8f5e9; border-color: #4caf50; }
+  .card.warn { background: #fff8e1; border-color: #ff9800; }
+  .card.bad  { background: #ffebee; border-color: #f44336; }
+  .card h3 { font-size: 16px; margin-bottom: 10px; }
+  .card .row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+  .card .row .label { color: #555; }
+  .card .row .val { font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+  th {
+    background: #f0f4f0; color: #2d5a3d; font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  tbody tr:hover { background: #fafafa; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  th.num { text-align: right; }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+  }
+  .badge.win  { background: #4caf50; color: white; }
+  .badge.ok   { background: #2196f3; color: white; }
+  .badge.warn { background: #ff9800; color: white; }
+  .badge.bad  { background: #f44336; color: white; }
+  .badge.off  { background: #9e9e9e; color: white; }
+  .insight {
+    background: #fffbe6; border-left: 4px solid #f9c23c;
+    padding: 14px 16px; border-radius: 6px; margin: 14px 0;
+  }
+  .critical {
+    background: #fce4ec; border-left: 4px solid #d81b60;
+    padding: 14px 16px; border-radius: 6px; margin: 14px 0;
+  }
+  .conv-funnel {
+    display: grid; grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center; gap: 8px; margin: 12px 0;
+  }
+  .funnel-step {
+    background: #f0f4f0; padding: 12px; border-radius: 6px;
+    text-align: center; border: 1px solid #d4e0d6;
+  }
+  .funnel-step .v { font-size: 18px; font-weight: 700; color: #2d5a3d; }
+  .funnel-step .l { font-size: 11px; color: #666; }
+  .funnel-arrow { font-size: 14px; color: #2d5a3d; font-weight: bold; }
+  .funnel-arrow .rate { display: block; font-size: 11px; color: #888; font-weight: normal; }
+
+  /* True vertical narrowing funnel */
+  .vfunnel {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0; margin: 20px 0;
+  }
+  .vstage {
+    color: #fff; text-align: center; padding: 18px 24px;
+    border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    transition: transform 0.15s;
+  }
+  .vstage:hover { transform: scale(1.02); }
+  .vstage .vnum { font-size: 30px; font-weight: 800; line-height: 1; }
+  .vstage .vlabel { font-size: 12px; font-weight: 700; letter-spacing: 1px; margin-top: 4px; opacity: 0.95; }
+  .vstage .vsub { font-size: 11px; opacity: 0.85; margin-top: 6px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.25); }
+  /* Funnel narrowing widths + colors */
+  .vs1 { width: 95%; background: #2c7be5; }
+  .vs2 { width: 78%; background: #4a8ee0; }
+  .vs3 { width: 60%; background: #3a8c4d; }
+  .vs4 { width: 42%; background: #e88732; }
+  .vs5 { width: 28%; background: #c0392b; }
+  /* Arrow between stages */
+  .varr {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 8px 0; font-size: 12px; line-height: 1.4;
+  }
+  .varr .ic { font-size: 14px; line-height: 1; opacity: 0.6; }
+  .varr .rate { font-weight: 700; font-size: 14px; margin-top: 2px; }
+  .varr .bm { font-size: 11px; color: #888; font-style: italic; margin-top: 1px; }
+  .varr.good .rate { color: #2e7d32; }
+  .varr.good .ic { color: #2e7d32; opacity: 1; }
+  .varr.warn .rate { color: #ef6c00; }
+  .varr.warn .ic { color: #ef6c00; opacity: 1; }
+  .varr.bad  .rate { color: #c62828; }
+  .varr.bad  .ic { color: #c62828; opacity: 1; }
+
+  /* KPI grid per khoa */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .kpi {
+    background: #f8faf8;
+    border: 1px solid #d4e0d6;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+  .kpi .val { font-size: 18px; font-weight: 700; color: #2d5a3d; }
+  .kpi .label { font-size: 10px; color: #666; text-transform: uppercase; margin-top: 4px; }
+  .kpi .bm { font-size: 9px; color: #999; margin-top: 2px; }
+  .kpi.good { background: #e8f5e9; border-color: #4caf50; }
+  .kpi.warn { background: #fff8e1; border-color: #ffb300; }
+  .kpi.bad  { background: #ffebee; border-color: #ef5350; }
+  .kpi.good .val { color: #2e7d32; }
+  .kpi.warn .val { color: #ef6c00; }
+  .kpi.bad .val { color: #c62828; }
+
+  /* FB embed showcase */
+  .fb-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 14px;
+    margin: 10px 0 18px;
+  }
+  .fb-card {
+    background: #f8faf8;
+    border: 1px solid #d4e0d6;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .fb-card .fb-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #2d5a3d;
+    margin-bottom: 6px;
+    padding: 4px 8px;
+    background: white;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .fb-card iframe {
+    width: 100%;
+    border: none;
+    overflow: hidden;
+    border-radius: 6px;
+    display: block;
+  }
+
+  /* Bottleneck table */
+  .bottleneck {
+    background: #fff3e0; border-left: 4px solid #ef6c00;
+    padding: 12px 16px; border-radius: 6px; margin: 12px 0;
+  }
+  .bottleneck h4 { margin: 0 0 8px 0; color: #ef6c00; font-size: 14px; }
+  .bottleneck ul { margin-left: 18px; font-size: 13px; }
+  .bottleneck li { margin: 4px 0; }
+  .bottleneck .stage-name { font-weight: 600; }
+  .bottleneck .val-bad { color: #c62828; font-weight: 700; }
+  .bottleneck .bm-text { color: #666; }
+  code {
+    background: #f0f4f0; padding: 2px 6px; border-radius: 3px;
+    font-size: 12px; color: #2d5a3d;
+  }
+  @media print {
+    body { background: white; padding: 0; }
+    section { box-shadow: none; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Weekly Marketing Report — W1 (1-7/6/2026)</h1>
+  <div class="meta">
+    <strong>BU2 — Trade / RTM / Trade Data</strong> | Khoá: Trade / RTM / Data | 
+    Source: Meta Ads + FB Page posts + Sales Lead tracking
+  </div>
+</header>
+
+<!-- ============ EXECUTIVE SUMMARY ============ -->
+<section>
+  <h2>Tổng quan 3 khoá</h2>
+  <div class="summary-grid">
+    
+    
+    <div class="card good">
+      <h3>Trade
+        <span class="badge win">Convert tốt</span>
+        
+      </h3>
+      <div class="row"><span class="label">Total spent</span><span class="val">3.30M</span></div>
+      <div class="row"><span class="label">Hotlead Social (actual)</span><span class="val">9</span></div>
+      <div class="row"><span class="label">Content lead (actual)</span><span class="val">21</span></div>
+      <div class="row"><span class="label">Cold clicks (CSV)</span><span class="val">250</span></div>
+      <div class="row"><span class="label">Conv click→form</span>
+        <span class="val" style="color:#2e7d32">
+          8.40%
+        </span>
+      </div>
+      <div class="row"><span class="label">Cost/content lead</span>
+        <span class="val">20K</span>
+      </div>
+      
+      <div class="row"><span class="label">CPL hot (image)</span><span class="val">320K</span></div>
+      
+      
+      <div class="row" style="margin-top:6px; padding-top:6px; border-top:1px dashed #ccc;">
+        <span class="label"><strong>Won total</strong></span>
+        <span class="val" style="color:#2e7d32"><strong>3</strong></span>
+      </div>
+      <div class="row"><span class="label">↳ từ Hot lead</span><span class="val">3</span></div>
+      <div class="row"><span class="label">↳ từ Cold lead</span><span class="val">0</span></div>
+      <div class="row"><span class="label">↳ từ Event</span><span class="val">0</span></div>
+      
+      <div class="row"><span class="label">Cost/won (paid)</span><span class="val">1.10M</span></div>
+      
+      
+    </div>
+    
+    
+    <div class="card warn">
+      <h3>RTM
+        <span class="badge off">Không có data cold</span>
+      </h3>
+      <div class="row"><span class="label">Total spent</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Hotlead Social (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Content lead (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Cold clicks (CSV)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Conv click→form</span>
+        <span class="val" style="color:#c62828">
+          0.00%
+        </span>
+      </div>
+      <div class="row"><span class="label">Cost/content lead</span>
+        <span class="val">—</span>
+      </div>
+      
+      
+    </div>
+    
+    
+    <div class="card warn">
+      <h3>Data
+        <span class="badge off">Không có data cold</span>
+      </h3>
+      <div class="row"><span class="label">Total spent</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Hotlead Social (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Content lead (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Cold clicks (CSV)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Conv click→form</span>
+        <span class="val" style="color:#c62828">
+          0.00%
+        </span>
+      </div>
+      <div class="row"><span class="label">Cost/content lead</span>
+        <span class="val">—</span>
+      </div>
+      
+      
+    </div>
+    
+  </div>
+</section>
+
+<!-- ============ PER KHOA DETAIL ============ -->
+
+<section>
+  <h2>1. Trade</h2>
+
+  
+  
+  <h3>A. Hotlead — Full funnel</h3>
+
+  
+  
+  
+  
+  
+
+  <div class="vfunnel">
+    
+    <div class="vstage vs1">
+      <div class="vnum">2.88M</div>
+      <div class="vlabel">SPENT (HOT)</div>
+    </div>
+    <div class="varr warn">
+      <span class="ic">▼</span>
+      <span class="rate">CPM 57K</span>
+      <span class="bm">BM 25-50K</span>
+    </div>
+
+    
+    <div class="vstage vs2">
+      <div class="vnum">50,419</div>
+      <div class="vlabel">IMPRESSIONS</div>
+      
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">CTR 0.71%</span>
+      <span class="bm">BM 1.5-2.5%</span>
+    </div>
+
+    
+    <div class="vstage vs3">
+      <div class="vnum">360</div>
+      <div class="vlabel">LINK CLICKS</div>
+      <div class="vsub">CPC 8K</div>
+    </div>
+    <div class="varr warn">
+      <span class="ic">▼</span>
+      <span class="rate">Click→Lead 3.33%</span>
+      <span class="bm">BM 5-10%</span>
+    </div>
+
+    
+    <div class="vstage vs4">
+      <div class="vnum">9</div>
+      <div class="vlabel">TOTAL LEADS</div>
+      <div class="vsub">CPL 320K · 12 form + -3 inbox</div>
+    </div>
+    <div class="varr good">
+      <span class="ic">▼</span>
+      <span class="rate">Win Rate 33.33%</span>
+      <span class="bm">BM 5-15%</span>
+    </div>
+
+    
+    <div class="vstage vs5">
+      <div class="vnum">3</div>
+      <div class="vlabel">WON (HOT)</div>
+      <div class="vsub">Cost/Won 959K</div>
+    </div>
+  </div>
+
+  
+  <div class="insight">
+    <strong>CPL = 320K/lead</strong> theo bảng actual (12 form CSV + -3 inbox/comment).
+  </div>
+  
+
+  <h4>Chi tiết từng ad Hot — sort theo Leads</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Ad name</th>
+        <th>Adset</th>
+        <th class="num">Spent</th>
+        <th class="num">Impr</th>
+        <th class="num">CPM</th>
+        <th class="num">CTR</th>
+        <th class="num">Clicks</th>
+        <th class="num">CPC</th>
+        <th class="num">Leads</th>
+        <th class="num">Click→Lead</th>
+        <th class="num">CPL</th>
+        <th>Đánh giá</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+      <tr>
+        <td><strong>Test1</strong></td>
+        <td>Trade Sales</td>
+        <td class="num">2.35M</td>
+        <td class="num">38,028</td>
+        <td class="num">62K</td>
+        <td class="num" style="color:#c62828">0.69%</td>
+        <td class="num">263</td>
+        <td class="num">9K</td>
+        <td class="num">9</td>
+        <td class="num" style="color:#ef6c00">3.42%</td>
+        <td class="num">261K</td>
+        <td>
+          <span class="badge win">Scale</span>
+          
+          
+          <span class="badge warn" title="CTR thấp">CTR↓</span>
+        </td>
+      </tr>
+    
+      <tr>
+        <td><strong>Shelfzone</strong></td>
+        <td>Trade Sales</td>
+        <td class="num">527K</td>
+        <td class="num">12,391</td>
+        <td class="num">43K</td>
+        <td class="num" style="color:#2e7d32">1.50%</td>
+        <td class="num">97</td>
+        <td class="num">5K</td>
+        <td class="num">3</td>
+        <td class="num" style="color:#ef6c00">3.09%</td>
+        <td class="num">176K</td>
+        <td>
+          <span class="badge win">Scale</span>
+          
+          
+          
+        </td>
+      </tr>
+    
+    </tbody>
+  </table>
+  
+
+  
+  
+  <h3>B. Cold lead — Full funnel</h3>
+
+  <div class="vfunnel">
+    
+    <div class="vstage vs1">
+      <div class="vnum">420K</div>
+      <div class="vlabel">SPENT (COLD)</div>
+    </div>
+    <div class="varr good">
+      <span class="ic">▼</span>
+      <span class="rate">CPM 19K</span>
+      <span class="bm">BM 25-50K</span>
+    </div>
+
+    
+    <div class="vstage vs2">
+      <div class="vnum">22,719</div>
+      <div class="vlabel">IMPRESSIONS</div>
+      
+    </div>
+    <div class="varr warn">
+      <span class="ic">▼</span>
+      <span class="rate">CTR 1.10%</span>
+      <span class="bm">BM 1.5-2.5%</span>
+    </div>
+
+    
+    <div class="vstage vs3">
+      <div class="vnum">250</div>
+      <div class="vlabel">LINK CLICKS</div>
+      <div class="vsub">CPC 2K</div>
+    </div>
+    <div class="varr good">
+      <span class="ic">▼</span>
+      <span class="rate">Click→Form 8.40%</span>
+      <span class="bm">BM 8-12%</span>
+    </div>
+
+    
+    <div class="vstage vs4">
+      <div class="vnum">21</div>
+      <div class="vlabel">CONTENT LEAD</div>
+      <div class="vsub">Cost/lead 20K</div>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Lead→Won 0.00%</span>
+      <span class="bm">BM 2-5%</span>
+    </div>
+
+    
+    <div class="vstage vs5">
+      <div class="vnum">0</div>
+      <div class="vlabel">WON (COLD)</div>
+      <div class="vsub">Cost/Won —</div>
+    </div>
+  </div>
+
+  
+  <div class="insight">
+    <strong>End-to-end Cost/content lead = 20K</strong>
+    (conv click→form 8.40%)
+  </div>
+  
+
+  <h4>Chi tiết từng ad Cold — sort theo Clicks</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Ad name</th>
+        <th>Adset</th>
+        <th class="num">Spent</th>
+        <th class="num">Impr</th>
+        <th class="num">CPM</th>
+        <th class="num">CTR</th>
+        <th class="num">Clicks</th>
+        <th class="num">CPC</th>
+        <th>Đánh giá</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+      <tr>
+        <td><strong>Ebook Trade CAT</strong></td>
+        <td>Trade</td>
+        <td class="num">420K</td>
+        <td class="num">22,719</td>
+        <td class="num">19K</td>
+        <td class="num" style="color:#2e7d32">2.38%</td>
+        <td class="num">250</td>
+        <td class="num">2K</td>
+        <td>
+          <span class="badge ok">Giữ</span>
+          
+          
+        </td>
+      </tr>
+    
+    </tbody>
+  </table>
+  
+
+  
+  
+  <div class="bottleneck">
+    <h4>🎯 Bottleneck cần tối ưu — 2 điểm</h4>
+    <ul>
+    
+      <li>
+        <span class="stage-name">Hot CTR:</span>
+        <span class="val-bad">0.71%</span>
+        <span class="bm-text">(BM 1.5-2.5%)</span>
+        → <em>Đổi creative/thumbnail</em>
+      </li>
+    
+      <li>
+        <span class="stage-name">Content→Won:</span>
+        <span class="val-bad">0.00%</span>
+        <span class="bm-text">(BM 2-5%)</span>
+        → <em>Nurture email/Zalo sequence cho content lead</em>
+      </li>
+    
+    </ul>
+  </div>
+  
+
+  
+</section>
+
+<section>
+  <h2>2. RTM</h2>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  <div class="critical">Không có ads cho khoá RTM trong kỳ này.</div>
+  
+</section>
+
+<section>
+  <h2>3. Data</h2>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  <div class="critical">Không có ads cho khoá Data trong kỳ này.</div>
+  
+</section>
+
+
+
+
+
+
+<!-- ============ BENCHMARK ============ -->
+<section>
+  <h2>Benchmark Education ngành (2026)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Chỉ số</th>
+        <th>SEA Education benchmark</th>
+        
+        <th class="num">Trade</th>
+        
+        <th class="num">RTM</th>
+        
+        <th class="num">Data</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>CTR Cold</strong></td>
+        <td>1.5 - 2.5%</td>
+        
+        <td class="num">1.10%</td>
+        
+        <td class="num">—</td>
+        
+        <td class="num">—</td>
+        
+      </tr>
+      <tr>
+        <td><strong>CPC Cold</strong></td>
+        <td>3.000 - 5.000đ</td>
+        
+        <td class="num">2K</td>
+        
+        <td class="num">—</td>
+        
+        <td class="num">—</td>
+        
+      </tr>
+      <tr>
+        <td><strong>Conv Click→Form</strong></td>
+        <td>8 - 12%</td>
+        
+        <td class="num">8.40%</td>
+        
+        <td class="num">0.00%</td>
+        
+        <td class="num">0.00%</td>
+        
+      </tr>
+      <tr>
+        <td><strong>CPL Hot (image)</strong></td>
+        <td>50K - 200K</td>
+        
+        <td class="num">320K</td>
+        
+        <td class="num">—</td>
+        
+        <td class="num">—</td>
+        
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section style="text-align:center; background:#2d5a3d; color:white;">
+  <p style="font-size:13px; opacity:0.85;">CASK Analytics Hub — Ads Analysis Report</p>
+  <p style="font-size:11px; opacity:0.7; margin-top:6px;">
+    3 ads in-scope | 0 ads out-of-scope (Brand/AOP/KAM/Ecom/Finance)
+  </p>
+</section>
+
+</div>
+</body>
+</html>
