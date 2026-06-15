@@ -226,6 +226,38 @@ def insights_to_dataframe_dict(rows: list[dict]) -> list[dict]:
     return out
 
 
+def exchange_for_long_lived_token(app_id: str, app_secret: str, short_token: str, timeout: float = 10) -> dict:
+    """Exchange short-lived user token (~1h) for long-lived (~60 days).
+
+    Returns:
+        {"ok": bool, "access_token": str, "expires_in": int, "error": str | None}
+    """
+    if not all([app_id, app_secret, short_token]):
+        return {"ok": False, "error": "Thiếu App ID, App Secret hoặc token"}
+
+    url = f"{GRAPH_BASE}/oauth/access_token"
+    params = {
+        "grant_type": "fb_exchange_token",
+        "client_id": app_id.strip(),
+        "client_secret": app_secret.strip(),
+        "fb_exchange_token": short_token.strip(),
+    }
+    try:
+        r = requests.get(url, params=params, timeout=timeout)
+        data = r.json()
+        if r.status_code != 200:
+            err = data.get("error", {})
+            return {"ok": False, "error": err.get("message") or f"HTTP {r.status_code}"}
+        return {
+            "ok": True,
+            "access_token": data.get("access_token"),
+            "expires_in": data.get("expires_in", 0),  # seconds
+            "token_type": data.get("token_type"),
+        }
+    except requests.exceptions.RequestException as e:
+        return {"ok": False, "error": str(e)}
+
+
 def verify_token(access_token: str, ad_account_id: str | None = None, timeout: float = 8) -> dict:
     """Quick health check: does token work + can it access ad account?"""
     # 1. Token basic check

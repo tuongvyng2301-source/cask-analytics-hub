@@ -20,7 +20,7 @@ from skills.bu_config import BU_CONFIG, ALL_KHOA, filter_khoa_by_bu
 from skills.ads_analysis import analyze_ads, render_ads_report
 from skills.organic_analysis import analyze_organic, find_ambiguous_posts, categorize_dataframe, list_all_posts_with_category
 from skills.lead_quality import analyze_leads
-from skills.meta_api import fetch_ad_creative, verify_token, fetch_ads_insights, insights_to_dataframe_dict, MetaAPIError
+from skills.meta_api import fetch_ad_creative, verify_token, fetch_ads_insights, insights_to_dataframe_dict, MetaAPIError, exchange_for_long_lived_token
 from skills.settings_store import (
     set_setting, get_setting, cache_creative, get_cached_creative, clear_creative_cache,
     password_is_set, set_password, verify_password, mask_secret,
@@ -167,6 +167,52 @@ def page_settings():
         if st.button("🗑️ Xoá Creative Cache"):
             n = clear_creative_cache(DB_PATH)
             st.info(f"Đã xoá {n} creative cached.")
+
+    # ---- Exchange short-lived → 60-day token ----
+    st.markdown("---")
+    st.markdown("### 🔄 Exchange to 60-day Token")
+    st.caption("Token từ Graph API Explorer chỉ sống 1-2 tiếng. Exchange thành 60 ngày để không phải re-generate liên tục.")
+
+    current_app_id = get_setting(DB_PATH, "meta_app_id", "")
+    current_app_secret = get_setting(DB_PATH, "meta_app_secret", "")
+
+    has_credentials = bool(current_app_id and current_app_secret)
+    if has_credentials:
+        st.markdown(f"**App ID**: `{current_app_id}` · **App Secret**: `{mask_secret(current_app_secret, 4)}`")
+    else:
+        st.warning("⚠️ Chưa setup App ID + App Secret. Setup 1 lần ở dưới:")
+
+    with st.expander("Setup App ID + App Secret (1 lần)", expanded=not has_credentials):
+        new_app_id = st.text_input("Meta App ID", value=current_app_id, placeholder="2393913804432161")
+        new_app_secret = st.text_input("Meta App Secret", type="password", placeholder="(paste from Developer Console > Settings > Basic > App Secret)")
+        if st.button("💾 Save App Credentials"):
+            if new_app_id.strip():
+                set_setting(DB_PATH, "meta_app_id", new_app_id.strip())
+            if new_app_secret.strip():
+                set_setting(DB_PATH, "meta_app_secret", new_app_secret.strip())
+            st.success("Saved.")
+            st.rerun()
+
+    short_token_input = st.text_input(
+        "Paste short-lived token (1-2h) để exchange thành 60-day",
+        type="password",
+        placeholder="EAA...",
+        help="Token từ Graph API Explorer. Sau exchange sẽ override token cũ.",
+    )
+
+    if st.button("🔄 Exchange to 60-day Token", type="primary", disabled=not (has_credentials and short_token_input.strip())):
+        with st.spinner("Đang exchange với Meta API..."):
+            result = exchange_for_long_lived_token(current_app_id, current_app_secret, short_token_input.strip())
+        if result.get("ok"):
+            new_token = result["access_token"]
+            expires_in = result.get("expires_in", 0)
+            days = expires_in // 86400
+            set_setting(DB_PATH, "meta_access_token", new_token)
+            st.success(f"✅ Exchange OK! Token mới có hiệu lực **~{days} ngày** (expires_in = {expires_in}s). Đã lưu vào hub.")
+            st.balloons()
+            st.rerun()
+        else:
+            st.error(f"❌ Exchange thất bại: {result.get('error')}")
 
     st.markdown("---")
 
