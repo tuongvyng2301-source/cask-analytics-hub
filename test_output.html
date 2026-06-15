@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Ads Analysis — W1 (1-7/6/2026)</title>
+<title>Ads Analysis — W1 (1-7/6/2026) — smoke test</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -165,6 +165,48 @@
     display: block;
   }
 
+  /* Explainable metrics — collapsible details */
+  details.metric-explain {
+    margin: 4px 0 0; padding: 0; border-radius: 4px;
+    background: rgba(255,255,255,0.08);
+  }
+  details.metric-explain summary {
+    cursor: pointer; font-size: 11px;
+    padding: 4px 8px; opacity: 0.85;
+    list-style: none; user-select: none;
+  }
+  details.metric-explain summary:hover { opacity: 1; background: rgba(255,255,255,0.05); }
+  details.metric-explain summary::-webkit-details-marker { display: none; }
+  details.metric-explain summary::before { content: "▶ "; font-size: 9px; }
+  details.metric-explain[open] summary::before { content: "▼ "; }
+  details.metric-explain .explain-body {
+    padding: 10px 14px; background: #fff; color: #333;
+    border-radius: 4px; margin: 4px;
+    font-size: 12px; line-height: 1.5;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  }
+  details.metric-explain .explain-body .e-row { padding: 4px 0; }
+  details.metric-explain .explain-body .e-label {
+    font-weight: 700; color: #2d5a3d; display: inline-block;
+    min-width: 90px;
+  }
+  details.metric-explain .explain-body code {
+    background: #f0f4f0; padding: 1px 5px; border-radius: 3px;
+    font-size: 11px; color: #1f4029;
+  }
+  details.metric-explain.pitfall .e-row.pf {
+    background: #fff8e1; padding: 6px 8px; border-radius: 4px;
+    border-left: 3px solid #f9c23c; margin-top: 6px;
+  }
+
+  /* Source mismatch warning */
+  .src-mismatch {
+    background: #fff3e0; border-left: 4px solid #ef6c00;
+    color: #5d4037; padding: 8px 12px; border-radius: 4px;
+    font-size: 12px; margin: 8px 0;
+  }
+  .src-mismatch strong { color: #bf360c; }
+
   /* Bottleneck table */
   .bottleneck {
     background: #fff3e0; border-left: 4px solid #ef6c00;
@@ -190,9 +232,9 @@
 <div class="container">
 
 <header>
-  <h1>Weekly Marketing Report — W1 (1-7/6/2026)</h1>
+  <h1>Weekly Marketing Report — W1 (1-7/6/2026) — smoke test</h1>
   <div class="meta">
-    <strong>BU2 — Trade / RTM / Trade Data</strong> | Khoá: Trade / RTM / Data | 
+    
     Source: Meta Ads + FB Page posts + Sales Lead tracking
   </div>
 </header>
@@ -203,43 +245,29 @@
   <div class="summary-grid">
     
     
-    <div class="card good">
-      <h3>Trade
-        <span class="badge win">Convert tốt</span>
-        
+    <div class="card warn">
+      <h3>AOP
+        <span class="badge off">Không có data cold</span>
       </h3>
-      <div class="row"><span class="label">Total spent</span><span class="val">3.30M</span></div>
-      <div class="row"><span class="label">Hotlead Social (actual)</span><span class="val">9</span></div>
-      <div class="row"><span class="label">Content lead (actual)</span><span class="val">21</span></div>
-      <div class="row"><span class="label">Cold clicks (CSV)</span><span class="val">250</span></div>
+      <div class="row"><span class="label">Total spent</span><span class="val">557K</span></div>
+      <div class="row"><span class="label">Hotlead Social (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Content lead (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Cold clicks (CSV)</span><span class="val">0</span></div>
       <div class="row"><span class="label">Conv click→form</span>
-        <span class="val" style="color:#2e7d32">
-          8.40%
+        <span class="val" style="color:#c62828">
+          0.00%
         </span>
       </div>
       <div class="row"><span class="label">Cost/content lead</span>
-        <span class="val">20K</span>
+        <span class="val">—</span>
       </div>
-      
-      <div class="row"><span class="label">CPL hot (image)</span><span class="val">320K</span></div>
-      
-      
-      <div class="row" style="margin-top:6px; padding-top:6px; border-top:1px dashed #ccc;">
-        <span class="label"><strong>Won total</strong></span>
-        <span class="val" style="color:#2e7d32"><strong>3</strong></span>
-      </div>
-      <div class="row"><span class="label">↳ từ Hot lead</span><span class="val">3</span></div>
-      <div class="row"><span class="label">↳ từ Cold lead</span><span class="val">0</span></div>
-      <div class="row"><span class="label">↳ từ Event</span><span class="val">0</span></div>
-      
-      <div class="row"><span class="label">Cost/won (paid)</span><span class="val">1.10M</span></div>
       
       
     </div>
     
     
     <div class="card warn">
-      <h3>RTM
+      <h3>Finance
         <span class="badge off">Không có data cold</span>
       </h3>
       <div class="row"><span class="label">Total spent</span><span class="val">0</span></div>
@@ -260,7 +288,119 @@
     
     
     <div class="card warn">
+      <h3>Brand
+        <span class="badge off">Không có data cold</span>
+      </h3>
+      <div class="row"><span class="label">Total spent</span><span class="val">224K</span></div>
+      <div class="row"><span class="label">Hotlead Social (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Content lead (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Cold clicks (CSV)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Conv click→form</span>
+        <span class="val" style="color:#c62828">
+          0.00%
+        </span>
+      </div>
+      <div class="row"><span class="label">Cost/content lead</span>
+        <span class="val">—</span>
+      </div>
+      
+      
+    </div>
+    
+    
+    <div class="card good">
+      <h3>Trade
+        <span class="badge win">Convert tốt</span>
+        
+      </h3>
+      <div class="row"><span class="label">Total spent</span><span class="val">2.98M</span></div>
+      <div class="row"><span class="label">Hotlead Social (actual)</span><span class="val">22</span></div>
+      <div class="row"><span class="label">Content lead (actual)</span><span class="val">21</span></div>
+      <div class="row"><span class="label">Cold clicks (CSV)</span><span class="val">250</span></div>
+      <div class="row"><span class="label">Conv click→form</span>
+        <span class="val" style="color:#2e7d32">
+          8.40%
+        </span>
+      </div>
+      <div class="row"><span class="label">Cost/content lead</span>
+        <span class="val">20K</span>
+      </div>
+      
+      <div class="row"><span class="label">CPL hot (image)</span><span class="val">116K</span></div>
+      
+      
+    </div>
+    
+    
+    <div class="card bad">
+      <h3>RTM
+        <span class="badge bad">Convert kém</span>
+        
+      </h3>
+      <div class="row"><span class="label">Total spent</span><span class="val">1.06M</span></div>
+      <div class="row"><span class="label">Hotlead Social (actual)</span><span class="val">16</span></div>
+      <div class="row"><span class="label">Content lead (actual)</span><span class="val">2</span></div>
+      <div class="row"><span class="label">Cold clicks (CSV)</span><span class="val">485</span></div>
+      <div class="row"><span class="label">Conv click→form</span>
+        <span class="val" style="color:#c62828">
+          0.41%
+        </span>
+      </div>
+      <div class="row"><span class="label">Cost/content lead</span>
+        <span class="val">175K</span>
+      </div>
+      
+      <div class="row"><span class="label">CPL hot (image)</span><span class="val">44K</span></div>
+      
+      
+    </div>
+    
+    
+    <div class="card warn">
       <h3>Data
+        <span class="badge warn">Convert thấp</span>
+        
+      </h3>
+      <div class="row"><span class="label">Total spent</span><span class="val">354K</span></div>
+      <div class="row"><span class="label">Hotlead Social (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Content lead (actual)</span><span class="val">6</span></div>
+      <div class="row"><span class="label">Cold clicks (CSV)</span><span class="val">519</span></div>
+      <div class="row"><span class="label">Conv click→form</span>
+        <span class="val" style="color:#ef6c00">
+          1.16%
+        </span>
+      </div>
+      <div class="row"><span class="label">Cost/content lead</span>
+        <span class="val">59K</span>
+      </div>
+      
+      
+    </div>
+    
+    
+    <div class="card warn">
+      <h3>KAM
+        <span class="badge off">Không có data cold</span>
+      </h3>
+      <div class="row"><span class="label">Total spent</span><span class="val">672K</span></div>
+      <div class="row"><span class="label">Hotlead Social (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Content lead (actual)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Cold clicks (CSV)</span><span class="val">0</span></div>
+      <div class="row"><span class="label">Conv click→form</span>
+        <span class="val" style="color:#c62828">
+          0.00%
+        </span>
+      </div>
+      <div class="row"><span class="label">Cost/content lead</span>
+        <span class="val">—</span>
+      </div>
+      
+      
+    </div>
+    
+    
+    <div class="card warn">
+      <h3>Ecom
         <span class="badge off">Không có data cold</span>
       </h3>
       <div class="row"><span class="label">Total spent</span><span class="val">0</span></div>
@@ -285,7 +425,7 @@
 <!-- ============ PER KHOA DETAIL ============ -->
 
 <section>
-  <h2>1. Trade</h2>
+  <h2>1. AOP</h2>
 
   
   
@@ -297,72 +437,120 @@
   
   
 
+  
+
   <div class="vfunnel">
     
     <div class="vstage vs1">
-      <div class="vnum">2.88M</div>
+      <div class="vnum">557K</div>
       <div class="vlabel">SPENT (HOT)</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Spent</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>Σ Amount spent (VND) của tất cả ad thuộc category AOP Hot trong date range</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights endpoint (level=ad)</div>
+          <div class="e-row"><span class="e-label">Raw:</span> 1 ads · tổng 556,929đ</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Spent có thể trùng nếu cùng ad chạy nhiều ngày — Meta tự aggregate, không double-count.</div>
+        </div>
+      </details>
     </div>
     <div class="varr warn">
       <span class="ic">▼</span>
-      <span class="rate">CPM 57K</span>
+      <span class="rate">CPM 134K</span>
       <span class="bm">BM 25-50K</span>
     </div>
 
     
     <div class="vstage vs2">
-      <div class="vnum">50,419</div>
+      <div class="vnum">4,163</div>
       <div class="vlabel">IMPRESSIONS</div>
       
+      <details class="metric-explain">
+        <summary>📐 Giải thích Impressions</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>Σ Impressions của tất cả ad AOP Hot</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights</div>
+          <div class="e-row"><span class="e-label">Raw:</span> 4,163 impressions · Reach 0</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Impressions ≠ Reach. 1 user có thể xem ad nhiều lần (Frequency).</div>
+        </div>
+      </details>
     </div>
-    <div class="varr bad">
+    <div class="varr warn">
       <span class="ic">▼</span>
-      <span class="rate">CTR 0.71%</span>
+      <span class="rate">CTR 1.39%</span>
       <span class="bm">BM 1.5-2.5%</span>
     </div>
 
     
     <div class="vstage vs3">
-      <div class="vnum">360</div>
+      <div class="vnum">58</div>
       <div class="vlabel">LINK CLICKS</div>
-      <div class="vsub">CPC 8K</div>
+      <div class="vsub">CPC 10K</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Link Clicks + CTR</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Clicks:</span> 58 link clicks · CPC trung bình 9,602đ</div>
+          <div class="e-row"><span class="e-label">CTR:</span> 58 clicks / 4,163 impr × 100 = 1.39%</div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall CTR:</span> Meta dùng &#39;CTR (all)&#39; bao gồm cả click vào page/share — không chỉ link click.</div>
+        </div>
+      </details>
     </div>
-    <div class="varr warn">
+    <div class="varr bad">
       <span class="ic">▼</span>
-      <span class="rate">Click→Lead 3.33%</span>
+      <span class="rate">Click→Lead 0.00%</span>
       <span class="bm">BM 5-10%</span>
     </div>
 
     
     <div class="vstage vs4">
-      <div class="vnum">9</div>
-      <div class="vlabel">TOTAL LEADS</div>
-      <div class="vsub">CPL 320K · 12 form + -3 inbox</div>
+      <div class="vnum">0</div>
+      <div class="vlabel">TOTAL HOT LEADS</div>
+      <div class="vsub">CPL — · Source: none</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Total Leads + CPL + Click→Lead</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Total Leads:</span> <code>MAX(CSV form leads, User actual input) — pick source có data lớn hơn</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> none</div>
+          <div class="e-row"><span class="e-label">Breakdown:</span> Chưa có data</div>
+          <div class="e-row"><span class="e-label">CPL:</span> 556,929đ / 0 leads = 0đ/lead</div>
+          <div class="e-row"><span class="e-label">Click→Lead:</span> 0 leads / 58 clicks = 0.00%</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Nếu CSV &gt; User actual nhiều (&gt;20%), có thể API đếm leads từ ad ngoài focus BU. Check categorize.</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → mở expander Actuals → input Hot Social = số đúng → Generate lại.</div>
+        </div>
+      </details>
     </div>
-    <div class="varr good">
+    <div class="varr bad">
       <span class="ic">▼</span>
-      <span class="rate">Win Rate 33.33%</span>
+      <span class="rate">Win Rate 0.00%</span>
       <span class="bm">BM 5-15%</span>
     </div>
 
     
     <div class="vstage vs5">
-      <div class="vnum">3</div>
+      <div class="vnum">0</div>
       <div class="vlabel">WON (HOT)</div>
-      <div class="vsub">Cost/Won 959K</div>
+      <div class="vsub">Cost/Won —</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Won + Win Rate</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Won:</span> 0 won deals</div>
+          <div class="e-row"><span class="e-label">Win Rate:</span> 0 won / 0 leads = 0.00%</div>
+          <div class="e-row"><span class="e-label">Cost/Won:</span> Spent / Won = 557K / 0 = —</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Cần đồng nhất criteria: &#39;won&#39; = ký HĐ + đã thanh toán, hay chỉ pre-commit?</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → expander Actuals → Won Hot.</div>
+        </div>
+      </details>
     </div>
   </div>
 
-  
-  <div class="insight">
-    <strong>CPL = 320K/lead</strong> theo bảng actual (12 form CSV + -3 inbox/comment).
-  </div>
   
 
   <h4>Chi tiết từng ad Hot — sort theo Leads</h4>
   <table>
     <thead>
       <tr>
+        <th>Visual</th>
         <th>Ad name</th>
         <th>Adset</th>
         <th class="num">Spent</th>
@@ -380,27 +568,438 @@
     <tbody>
     
       <tr>
-        <td><strong>Test1</strong></td>
-        <td>Trade Sales</td>
-        <td class="num">2.35M</td>
-        <td class="num">38,028</td>
-        <td class="num">62K</td>
-        <td class="num" style="color:#c62828">0.69%</td>
-        <td class="num">263</td>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Xac dinh phan khuc dau tu</strong></td>
+        <td>Manager</td>
+        <td class="num">557K</td>
+        <td class="num">4,163</td>
+        <td class="num">134K</td>
+        <td class="num" style="color:#2e7d32">2.28%</td>
+        <td class="num">58</td>
+        <td class="num">10K</td>
+        <td class="num">0</td>
+        <td class="num" style="color:#c62828">0.00%</td>
+        <td class="num">—</td>
+        <td>
+          <span class="badge bad">Tắt</span>
+          
+          
+        </td>
+      </tr>
+    
+    </tbody>
+  </table>
+  
+
+  
+  
+
+  
+  
+  <div class="bottleneck">
+    <h4>🎯 Bottleneck cần tối ưu — 1 điểm</h4>
+    <ul>
+    
+      <li>
+        <span class="stage-name">Hot Click→Lead:</span>
+        <span class="val-bad">0.00%</span>
+        <span class="bm-text">(BM 5-10%)</span>
+        → <em>Audit Lead Form (số trường, mobile UX)</em>
+      </li>
+    
+    </ul>
+  </div>
+  
+
+  
+</section>
+
+<section>
+  <h2>2. Finance</h2>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  <div class="critical">Không có ads cho khoá Finance trong kỳ này.</div>
+  
+</section>
+
+<section>
+  <h2>3. Brand</h2>
+
+  
+  
+  <h3>A. Hotlead — Full funnel</h3>
+
+  
+  
+  
+  
+  
+
+  
+
+  <div class="vfunnel">
+    
+    <div class="vstage vs1">
+      <div class="vnum">224K</div>
+      <div class="vlabel">SPENT (HOT)</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Spent</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>Σ Amount spent (VND) của tất cả ad thuộc category Brand Hot trong date range</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights endpoint (level=ad)</div>
+          <div class="e-row"><span class="e-label">Raw:</span> 1 ads · tổng 223,984đ</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Spent có thể trùng nếu cùng ad chạy nhiều ngày — Meta tự aggregate, không double-count.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr warn">
+      <span class="ic">▼</span>
+      <span class="rate">CPM 84K</span>
+      <span class="bm">BM 25-50K</span>
+    </div>
+
+    
+    <div class="vstage vs2">
+      <div class="vnum">2,665</div>
+      <div class="vlabel">IMPRESSIONS</div>
+      
+      <details class="metric-explain">
+        <summary>📐 Giải thích Impressions</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>Σ Impressions của tất cả ad Brand Hot</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights</div>
+          <div class="e-row"><span class="e-label">Raw:</span> 2,665 impressions · Reach 0</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Impressions ≠ Reach. 1 user có thể xem ad nhiều lần (Frequency).</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">CTR 0.90%</span>
+      <span class="bm">BM 1.5-2.5%</span>
+    </div>
+
+    
+    <div class="vstage vs3">
+      <div class="vnum">24</div>
+      <div class="vlabel">LINK CLICKS</div>
+      <div class="vsub">CPC 9K</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Link Clicks + CTR</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Clicks:</span> 24 link clicks · CPC trung bình 9,333đ</div>
+          <div class="e-row"><span class="e-label">CTR:</span> 24 clicks / 2,665 impr × 100 = 0.90%</div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall CTR:</span> Meta dùng &#39;CTR (all)&#39; bao gồm cả click vào page/share — không chỉ link click.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Click→Lead 0.00%</span>
+      <span class="bm">BM 5-10%</span>
+    </div>
+
+    
+    <div class="vstage vs4">
+      <div class="vnum">0</div>
+      <div class="vlabel">TOTAL HOT LEADS</div>
+      <div class="vsub">CPL — · Source: none</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Total Leads + CPL + Click→Lead</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Total Leads:</span> <code>MAX(CSV form leads, User actual input) — pick source có data lớn hơn</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> none</div>
+          <div class="e-row"><span class="e-label">Breakdown:</span> Chưa có data</div>
+          <div class="e-row"><span class="e-label">CPL:</span> 223,984đ / 0 leads = 0đ/lead</div>
+          <div class="e-row"><span class="e-label">Click→Lead:</span> 0 leads / 24 clicks = 0.00%</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Nếu CSV &gt; User actual nhiều (&gt;20%), có thể API đếm leads từ ad ngoài focus BU. Check categorize.</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → mở expander Actuals → input Hot Social = số đúng → Generate lại.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Win Rate 0.00%</span>
+      <span class="bm">BM 5-15%</span>
+    </div>
+
+    
+    <div class="vstage vs5">
+      <div class="vnum">0</div>
+      <div class="vlabel">WON (HOT)</div>
+      <div class="vsub">Cost/Won —</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Won + Win Rate</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Won:</span> 0 won deals</div>
+          <div class="e-row"><span class="e-label">Win Rate:</span> 0 won / 0 leads = 0.00%</div>
+          <div class="e-row"><span class="e-label">Cost/Won:</span> Spent / Won = 224K / 0 = —</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Cần đồng nhất criteria: &#39;won&#39; = ký HĐ + đã thanh toán, hay chỉ pre-commit?</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → expander Actuals → Won Hot.</div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  
+
+  <h4>Chi tiết từng ad Hot — sort theo Leads</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Visual</th>
+        <th>Ad name</th>
+        <th>Adset</th>
+        <th class="num">Spent</th>
+        <th class="num">Impr</th>
+        <th class="num">CPM</th>
+        <th class="num">CTR</th>
+        <th class="num">Clicks</th>
+        <th class="num">CPC</th>
+        <th class="num">Leads</th>
+        <th class="num">Click→Lead</th>
+        <th class="num">CPL</th>
+        <th>Đánh giá</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>PR &amp; Adv</strong></td>
+        <td>Brand</td>
+        <td class="num">224K</td>
+        <td class="num">2,665</td>
+        <td class="num">84K</td>
+        <td class="num" style="color:#2e7d32">1.54%</td>
+        <td class="num">24</td>
         <td class="num">9K</td>
-        <td class="num">9</td>
-        <td class="num" style="color:#ef6c00">3.42%</td>
-        <td class="num">261K</td>
+        <td class="num">0</td>
+        <td class="num" style="color:#c62828">0.00%</td>
+        <td class="num">—</td>
+        <td>
+          <span class="badge bad">Tắt</span>
+          
+          
+        </td>
+      </tr>
+    
+    </tbody>
+  </table>
+  
+
+  
+  
+
+  
+  
+  <div class="bottleneck">
+    <h4>🎯 Bottleneck cần tối ưu — 1 điểm</h4>
+    <ul>
+    
+      <li>
+        <span class="stage-name">Hot CTR:</span>
+        <span class="val-bad">0.90%</span>
+        <span class="bm-text">(BM 1.5-2.5%)</span>
+        → <em>Đổi creative/thumbnail</em>
+      </li>
+    
+    </ul>
+  </div>
+  
+
+  
+</section>
+
+<section>
+  <h2>4. Trade</h2>
+
+  
+  
+  <h3>A. Hotlead — Full funnel</h3>
+
+  
+  
+  
+  
+  
+
+  
+
+  <div class="vfunnel">
+    
+    <div class="vstage vs1">
+      <div class="vnum">2.56M</div>
+      <div class="vlabel">SPENT (HOT)</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Spent</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>Σ Amount spent (VND) của tất cả ad thuộc category Trade Hot trong date range</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights endpoint (level=ad)</div>
+          <div class="e-row"><span class="e-label">Raw:</span> 7 ads · tổng 2,558,009đ</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Spent có thể trùng nếu cùng ad chạy nhiều ngày — Meta tự aggregate, không double-count.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr warn">
+      <span class="ic">▼</span>
+      <span class="rate">CPM 61K</span>
+      <span class="bm">BM 25-50K</span>
+    </div>
+
+    
+    <div class="vstage vs2">
+      <div class="vnum">42,259</div>
+      <div class="vlabel">IMPRESSIONS</div>
+      
+      <details class="metric-explain">
+        <summary>📐 Giải thích Impressions</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>Σ Impressions của tất cả ad Trade Hot</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights</div>
+          <div class="e-row"><span class="e-label">Raw:</span> 42,259 impressions · Reach 0</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Impressions ≠ Reach. 1 user có thể xem ad nhiều lần (Frequency).</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">CTR 0.74%</span>
+      <span class="bm">BM 1.5-2.5%</span>
+    </div>
+
+    
+    <div class="vstage vs3">
+      <div class="vnum">312</div>
+      <div class="vlabel">LINK CLICKS</div>
+      <div class="vsub">CPC 8K</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Link Clicks + CTR</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Clicks:</span> 312 link clicks · CPC trung bình 8,199đ</div>
+          <div class="e-row"><span class="e-label">CTR:</span> 312 clicks / 42,259 impr × 100 = 0.74%</div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall CTR:</span> Meta dùng &#39;CTR (all)&#39; bao gồm cả click vào page/share — không chỉ link click.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr good">
+      <span class="ic">▼</span>
+      <span class="rate">Click→Lead 7.05%</span>
+      <span class="bm">BM 5-10%</span>
+    </div>
+
+    
+    <div class="vstage vs4">
+      <div class="vnum">22</div>
+      <div class="vlabel">TOTAL HOT LEADS</div>
+      <div class="vsub">CPL 116K · Source: user_actual</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Total Leads + CPL + Click→Lead</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Total Leads:</span> <code>MAX(CSV form leads, User actual input) — pick source có data lớn hơn</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> user_actual</div>
+          <div class="e-row"><span class="e-label">Breakdown:</span> 12 form (Meta API) + 10 inbox/DM (user tracked)</div>
+          <div class="e-row"><span class="e-label">CPL:</span> 2,558,009đ / 22 leads = 116,273đ/lead</div>
+          <div class="e-row"><span class="e-label">Click→Lead:</span> 22 leads / 312 clicks = 7.05%</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Nếu CSV &gt; User actual nhiều (&gt;20%), có thể API đếm leads từ ad ngoài focus BU. Check categorize.</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → mở expander Actuals → input Hot Social = số đúng → Generate lại.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Win Rate 0.00%</span>
+      <span class="bm">BM 5-15%</span>
+    </div>
+
+    
+    <div class="vstage vs5">
+      <div class="vnum">0</div>
+      <div class="vlabel">WON (HOT)</div>
+      <div class="vsub">Cost/Won —</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Won + Win Rate</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Won:</span> 0 won deals</div>
+          <div class="e-row"><span class="e-label">Win Rate:</span> 0 won / 22 leads = 0.00%</div>
+          <div class="e-row"><span class="e-label">Cost/Won:</span> Spent / Won = 2.56M / 0 = —</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Cần đồng nhất criteria: &#39;won&#39; = ký HĐ + đã thanh toán, hay chỉ pre-commit?</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → expander Actuals → Won Hot.</div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  
+  <div class="insight">
+    <strong>CPL = 116K/lead</strong> theo bảng actual (12 form CSV + 10 inbox/comment).
+  </div>
+  
+
+  <h4>Chi tiết từng ad Hot — sort theo Leads</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Visual</th>
+        <th>Ad name</th>
+        <th>Adset</th>
+        <th class="num">Spent</th>
+        <th class="num">Impr</th>
+        <th class="num">CPM</th>
+        <th class="num">CTR</th>
+        <th class="num">Clicks</th>
+        <th class="num">CPC</th>
+        <th class="num">Leads</th>
+        <th class="num">Click→Lead</th>
+        <th class="num">CPL</th>
+        <th>Đánh giá</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>MS thap, SOS cao | Anh Khoa</strong></td>
+        <td>TRADE M04 -&gt; 1505</td>
+        <td class="num">846K</td>
+        <td class="num">9,262</td>
+        <td class="num">91K</td>
+        <td class="num" style="color:#2e7d32">2.19%</td>
+        <td class="num">113</td>
+        <td class="num">7K</td>
+        <td class="num">4</td>
+        <td class="num" style="color:#ef6c00">3.54%</td>
+        <td class="num">211K</td>
         <td>
           <span class="badge win">Scale</span>
           
           
-          <span class="badge warn" title="CTR thấp">CTR↓</span>
+          
         </td>
       </tr>
     
       <tr>
-        <td><strong>Shelfzone</strong></td>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Shelfzone: Anh Nhan</strong></td>
         <td>Trade Sales</td>
         <td class="num">527K</td>
         <td class="num">12,391</td>
@@ -414,6 +1013,119 @@
         <td>
           <span class="badge win">Scale</span>
           
+          
+          
+        </td>
+      </tr>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Sales chuyen qua Trade</strong></td>
+        <td>LEAD FORM</td>
+        <td class="num">770K</td>
+        <td class="num">13,180</td>
+        <td class="num">58K</td>
+        <td class="num" style="color:#c62828">0.84%</td>
+        <td class="num">65</td>
+        <td class="num">12K</td>
+        <td class="num">3</td>
+        <td class="num" style="color:#ef6c00">4.62%</td>
+        <td class="num">257K</td>
+        <td>
+          <span class="badge win">Scale</span>
+          
+          
+          <span class="badge warn" title="CTR thấp">CTR↓</span>
+        </td>
+      </tr>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Exec to Manager | 14 nang luc</strong></td>
+        <td>LEAD FORM</td>
+        <td class="num">136K</td>
+        <td class="num">2,588</td>
+        <td class="num">53K</td>
+        <td class="num" style="color:#ef6c00">1.47%</td>
+        <td class="num">16</td>
+        <td class="num">9K</td>
+        <td class="num">1</td>
+        <td class="num" style="color:#2e7d32">6.25%</td>
+        <td class="num">136K</td>
+        <td>
+          <span class="badge ok">Giữ</span>
+          
+          
+          
+        </td>
+      </tr>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Sales chuyen qua Trade</strong></td>
+        <td>Trade Sales</td>
+        <td class="num">103K</td>
+        <td class="num">2,805</td>
+        <td class="num">37K</td>
+        <td class="num" style="color:#c62828">0.96%</td>
+        <td class="num">6</td>
+        <td class="num">17K</td>
+        <td class="num">1</td>
+        <td class="num" style="color:#2e7d32">16.67%</td>
+        <td class="num">103K</td>
+        <td>
+          <span class="badge ok">Giữ</span>
+          
+          
+          <span class="badge warn" title="CTR thấp">CTR↓</span>
+        </td>
+      </tr>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Promotion trade-in | Anh Khoa</strong></td>
+        <td>TRADE M04 -&gt; 1505</td>
+        <td class="num">134K</td>
+        <td class="num">1,582</td>
+        <td class="num">84K</td>
+        <td class="num" style="color:#2e7d32">1.52%</td>
+        <td class="num">12</td>
+        <td class="num">11K</td>
+        <td class="num">0</td>
+        <td class="num" style="color:#c62828">0.00%</td>
+        <td class="num">—</td>
+        <td>
+          <span class="badge bad">Tắt</span>
+          
+          
+        </td>
+      </tr>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>POSM | Anh Nhan</strong></td>
+        <td>TRADE M04 -&gt; 1505</td>
+        <td class="num">42K</td>
+        <td class="num">451</td>
+        <td class="num">92K</td>
+        <td class="num" style="color:#c62828">0.67%</td>
+        <td class="num">3</td>
+        <td class="num">14K</td>
+        <td class="num">0</td>
+        <td class="num" style="color:#c62828">0.00%</td>
+        <td class="num">—</td>
+        <td>
+          <span class="badge bad">Tắt</span>
           
           
         </td>
@@ -494,6 +1206,7 @@
   <table>
     <thead>
       <tr>
+        <th>Visual</th>
         <th>Ad name</th>
         <th>Adset</th>
         <th class="num">Spent</th>
@@ -508,6 +1221,9 @@
     <tbody>
     
       <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
         <td><strong>Ebook Trade CAT</strong></td>
         <td>Trade</td>
         <td class="num">420K</td>
@@ -530,14 +1246,21 @@
   
   
   <div class="bottleneck">
-    <h4>🎯 Bottleneck cần tối ưu — 2 điểm</h4>
+    <h4>🎯 Bottleneck cần tối ưu — 3 điểm</h4>
     <ul>
     
       <li>
         <span class="stage-name">Hot CTR:</span>
-        <span class="val-bad">0.71%</span>
+        <span class="val-bad">0.74%</span>
         <span class="bm-text">(BM 1.5-2.5%)</span>
         → <em>Đổi creative/thumbnail</em>
+      </li>
+    
+      <li>
+        <span class="stage-name">Hot Lead→Won:</span>
+        <span class="val-bad">0.00%</span>
+        <span class="bm-text">(BM 5-15%)</span>
+        → <em>Sales follow-up speed / lead quality scoring</em>
       </li>
     
       <li>
@@ -555,24 +1278,754 @@
 </section>
 
 <section>
-  <h2>2. RTM</h2>
+  <h2>5. RTM</h2>
 
   
   
+  <h3>A. Hotlead — Full funnel</h3>
 
   
   
+  
+  
+  
+
+  
+
+  <div class="vfunnel">
+    
+    <div class="vstage vs1">
+      <div class="vnum">712K</div>
+      <div class="vlabel">SPENT (HOT)</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Spent</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>Σ Amount spent (VND) của tất cả ad thuộc category RTM Hot trong date range</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights endpoint (level=ad)</div>
+          <div class="e-row"><span class="e-label">Raw:</span> 3 ads · tổng 711,507đ</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Spent có thể trùng nếu cùng ad chạy nhiều ngày — Meta tự aggregate, không double-count.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr good">
+      <span class="ic">▼</span>
+      <span class="rate">CPM 48K</span>
+      <span class="bm">BM 25-50K</span>
+    </div>
+
+    
+    <div class="vstage vs2">
+      <div class="vnum">14,939</div>
+      <div class="vlabel">IMPRESSIONS</div>
+      
+      <details class="metric-explain">
+        <summary>📐 Giải thích Impressions</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>Σ Impressions của tất cả ad RTM Hot</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights</div>
+          <div class="e-row"><span class="e-label">Raw:</span> 14,939 impressions · Reach 0</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Impressions ≠ Reach. 1 user có thể xem ad nhiều lần (Frequency).</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">CTR 0.66%</span>
+      <span class="bm">BM 1.5-2.5%</span>
+    </div>
+
+    
+    <div class="vstage vs3">
+      <div class="vnum">99</div>
+      <div class="vlabel">LINK CLICKS</div>
+      <div class="vsub">CPC 7K</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Link Clicks + CTR</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Clicks:</span> 99 link clicks · CPC trung bình 7,187đ</div>
+          <div class="e-row"><span class="e-label">CTR:</span> 99 clicks / 14,939 impr × 100 = 0.66%</div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall CTR:</span> Meta dùng &#39;CTR (all)&#39; bao gồm cả click vào page/share — không chỉ link click.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr good">
+      <span class="ic">▼</span>
+      <span class="rate">Click→Lead 16.16%</span>
+      <span class="bm">BM 5-10%</span>
+    </div>
+
+    
+    <div class="vstage vs4">
+      <div class="vnum">16</div>
+      <div class="vlabel">TOTAL HOT LEADS</div>
+      <div class="vsub">CPL 44K · Source: user_actual</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Total Leads + CPL + Click→Lead</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Total Leads:</span> <code>MAX(CSV form leads, User actual input) — pick source có data lớn hơn</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> user_actual</div>
+          <div class="e-row"><span class="e-label">Breakdown:</span> 6 form (Meta API) + 10 inbox/DM (user tracked)</div>
+          <div class="e-row"><span class="e-label">CPL:</span> 711,507đ / 16 leads = 44,469đ/lead</div>
+          <div class="e-row"><span class="e-label">Click→Lead:</span> 16 leads / 99 clicks = 16.16%</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Nếu CSV &gt; User actual nhiều (&gt;20%), có thể API đếm leads từ ad ngoài focus BU. Check categorize.</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → mở expander Actuals → input Hot Social = số đúng → Generate lại.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Win Rate 0.00%</span>
+      <span class="bm">BM 5-15%</span>
+    </div>
+
+    
+    <div class="vstage vs5">
+      <div class="vnum">0</div>
+      <div class="vlabel">WON (HOT)</div>
+      <div class="vsub">Cost/Won —</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Won + Win Rate</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Won:</span> 0 won deals</div>
+          <div class="e-row"><span class="e-label">Win Rate:</span> 0 won / 16 leads = 0.00%</div>
+          <div class="e-row"><span class="e-label">Cost/Won:</span> Spent / Won = 712K / 0 = —</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Cần đồng nhất criteria: &#39;won&#39; = ký HĐ + đã thanh toán, hay chỉ pre-commit?</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → expander Actuals → Won Hot.</div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  
+  <div class="insight">
+    <strong>CPL = 44K/lead</strong> theo bảng actual (6 form CSV + 10 inbox/comment).
+  </div>
+  
+
+  <h4>Chi tiết từng ad Hot — sort theo Leads</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Visual</th>
+        <th>Ad name</th>
+        <th>Adset</th>
+        <th class="num">Spent</th>
+        <th class="num">Impr</th>
+        <th class="num">CPM</th>
+        <th class="num">CTR</th>
+        <th class="num">Clicks</th>
+        <th class="num">CPC</th>
+        <th class="num">Leads</th>
+        <th class="num">Click→Lead</th>
+        <th class="num">CPL</th>
+        <th>Đánh giá</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Sales sup -&gt; ASM</strong></td>
+        <td>Trade Sales</td>
+        <td class="num">668K</td>
+        <td class="num">14,007</td>
+        <td class="num">48K</td>
+        <td class="num" style="color:#2e7d32">1.61%</td>
+        <td class="num">94</td>
+        <td class="num">7K</td>
+        <td class="num">6</td>
+        <td class="num" style="color:#2e7d32">6.38%</td>
+        <td class="num">111K</td>
+        <td>
+          <span class="badge win">Scale</span>
+          
+          
+          
+        </td>
+      </tr>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Agenda khoa hoc</strong></td>
+        <td>Trade Sales</td>
+        <td class="num">40K</td>
+        <td class="num">869</td>
+        <td class="num">46K</td>
+        <td class="num" style="color:#ef6c00">1.38%</td>
+        <td class="num">5</td>
+        <td class="num">8K</td>
+        <td class="num">0</td>
+        <td class="num" style="color:#c62828">0.00%</td>
+        <td class="num">—</td>
+        <td>
+          <span class="badge bad">Tắt</span>
+          
+          
+        </td>
+      </tr>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Banner khoa hoc</strong></td>
+        <td>Trade Sales</td>
+        <td class="num">4K</td>
+        <td class="num">63</td>
+        <td class="num">68K</td>
+        <td class="num" style="color:#2e7d32">1.59%</td>
+        <td class="num">0</td>
+        <td class="num">0</td>
+        <td class="num">0</td>
+        <td class="num" style="color:#c62828">0.00%</td>
+        <td class="num">—</td>
+        <td>
+          <span class="badge off">Test budget thấp</span>
+          
+          
+          
+        </td>
+      </tr>
+    
+    </tbody>
+  </table>
+  
 
   
   
+  <h3>B. Cold lead — Full funnel</h3>
+
+  <div class="vfunnel">
+    
+    <div class="vstage vs1">
+      <div class="vnum">350K</div>
+      <div class="vlabel">SPENT (COLD)</div>
+    </div>
+    <div class="varr good">
+      <span class="ic">▼</span>
+      <span class="rate">CPM 19K</span>
+      <span class="bm">BM 25-50K</span>
+    </div>
+
+    
+    <div class="vstage vs2">
+      <div class="vnum">18,698</div>
+      <div class="vlabel">IMPRESSIONS</div>
+      
+    </div>
+    <div class="varr good">
+      <span class="ic">▼</span>
+      <span class="rate">CTR 2.59%</span>
+      <span class="bm">BM 1.5-2.5%</span>
+    </div>
+
+    
+    <div class="vstage vs3">
+      <div class="vnum">485</div>
+      <div class="vlabel">LINK CLICKS</div>
+      <div class="vsub">CPC 721</div>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Click→Form 0.41%</span>
+      <span class="bm">BM 8-12%</span>
+    </div>
+
+    
+    <div class="vstage vs4">
+      <div class="vnum">2</div>
+      <div class="vlabel">CONTENT LEAD</div>
+      <div class="vsub">Cost/lead 175K</div>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Lead→Won 0.00%</span>
+      <span class="bm">BM 2-5%</span>
+    </div>
+
+    
+    <div class="vstage vs5">
+      <div class="vnum">0</div>
+      <div class="vlabel">WON (COLD)</div>
+      <div class="vsub">Cost/Won —</div>
+    </div>
+  </div>
 
   
-  <div class="critical">Không có ads cho khoá RTM trong kỳ này.</div>
+  <div class="insight">
+    <strong>End-to-end Cost/content lead = 175K</strong>
+    (conv click→form 0.41%)
+  </div>
+  
+
+  <h4>Chi tiết từng ad Cold — sort theo Clicks</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Visual</th>
+        <th>Ad name</th>
+        <th>Adset</th>
+        <th class="num">Spent</th>
+        <th class="num">Impr</th>
+        <th class="num">CPM</th>
+        <th class="num">CTR</th>
+        <th class="num">Clicks</th>
+        <th class="num">CPC</th>
+        <th>Đánh giá</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Cheatsheet</strong></td>
+        <td>RTM</td>
+        <td class="num">241K</td>
+        <td class="num">12,786</td>
+        <td class="num">19K</td>
+        <td class="num" style="color:#2e7d32">4.75%</td>
+        <td class="num">403</td>
+        <td class="num">598</td>
+        <td>
+          <span class="badge win">Scale</span>
+          
+          
+        </td>
+      </tr>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Tu dien RTM ver 2.0</strong></td>
+        <td>RTM</td>
+        <td class="num">109K</td>
+        <td class="num">5,912</td>
+        <td class="num">18K</td>
+        <td class="num" style="color:#2e7d32">2.55%</td>
+        <td class="num">82</td>
+        <td class="num">1K</td>
+        <td>
+          <span class="badge ok">Giữ</span>
+          
+          
+        </td>
+      </tr>
+    
+    </tbody>
+  </table>
+  
+
+  
+  
+  <div class="bottleneck">
+    <h4>🎯 Bottleneck cần tối ưu — 4 điểm</h4>
+    <ul>
+    
+      <li>
+        <span class="stage-name">Hot CTR:</span>
+        <span class="val-bad">0.66%</span>
+        <span class="bm-text">(BM 1.5-2.5%)</span>
+        → <em>Đổi creative/thumbnail</em>
+      </li>
+    
+      <li>
+        <span class="stage-name">Hot Lead→Won:</span>
+        <span class="val-bad">0.00%</span>
+        <span class="bm-text">(BM 5-15%)</span>
+        → <em>Sales follow-up speed / lead quality scoring</em>
+      </li>
+    
+      <li>
+        <span class="stage-name">Cold Click→Form:</span>
+        <span class="val-bad">0.41%</span>
+        <span class="bm-text">(BM 8-12%)</span>
+        → <em>Audit landing page + GG Form (rút gọn trường, headline match ad)</em>
+      </li>
+    
+      <li>
+        <span class="stage-name">Content→Won:</span>
+        <span class="val-bad">0.00%</span>
+        <span class="bm-text">(BM 2-5%)</span>
+        → <em>Nurture email/Zalo sequence cho content lead</em>
+      </li>
+    
+    </ul>
+  </div>
+  
+
   
 </section>
 
 <section>
-  <h2>3. Data</h2>
+  <h2>6. Data</h2>
+
+  
+  
+
+  
+  
+  <h3>B. Cold lead — Full funnel</h3>
+
+  <div class="vfunnel">
+    
+    <div class="vstage vs1">
+      <div class="vnum">354K</div>
+      <div class="vlabel">SPENT (COLD)</div>
+    </div>
+    <div class="varr good">
+      <span class="ic">▼</span>
+      <span class="rate">CPM 28K</span>
+      <span class="bm">BM 25-50K</span>
+    </div>
+
+    
+    <div class="vstage vs2">
+      <div class="vnum">12,718</div>
+      <div class="vlabel">IMPRESSIONS</div>
+      
+    </div>
+    <div class="varr good">
+      <span class="ic">▼</span>
+      <span class="rate">CTR 4.08%</span>
+      <span class="bm">BM 1.5-2.5%</span>
+    </div>
+
+    
+    <div class="vstage vs3">
+      <div class="vnum">519</div>
+      <div class="vlabel">LINK CLICKS</div>
+      <div class="vsub">CPC 682</div>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Click→Form 1.16%</span>
+      <span class="bm">BM 8-12%</span>
+    </div>
+
+    
+    <div class="vstage vs4">
+      <div class="vnum">6</div>
+      <div class="vlabel">CONTENT LEAD</div>
+      <div class="vsub">Cost/lead 59K</div>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Lead→Won 0.00%</span>
+      <span class="bm">BM 2-5%</span>
+    </div>
+
+    
+    <div class="vstage vs5">
+      <div class="vnum">0</div>
+      <div class="vlabel">WON (COLD)</div>
+      <div class="vsub">Cost/Won —</div>
+    </div>
+  </div>
+
+  
+  <div class="insight">
+    <strong>End-to-end Cost/content lead = 59K</strong>
+    (conv click→form 1.16%)
+  </div>
+  
+
+  <h4>Chi tiết từng ad Cold — sort theo Clicks</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Visual</th>
+        <th>Ad name</th>
+        <th>Adset</th>
+        <th class="num">Spent</th>
+        <th class="num">Impr</th>
+        <th class="num">CPM</th>
+        <th class="num">CTR</th>
+        <th class="num">Clicks</th>
+        <th class="num">CPC</th>
+        <th>Đánh giá</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Sell-out tu dien thuat ngu</strong></td>
+        <td>Data</td>
+        <td class="num">353K</td>
+        <td class="num">12,624</td>
+        <td class="num">28K</td>
+        <td class="num" style="color:#2e7d32">5.38%</td>
+        <td class="num">519</td>
+        <td class="num">680</td>
+        <td>
+          <span class="badge win">Scale</span>
+          
+          
+        </td>
+      </tr>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>Trade Data Analytics ver 2.0</strong></td>
+        <td>Data</td>
+        <td class="num">1K</td>
+        <td class="num">94</td>
+        <td class="num">13K</td>
+        <td class="num" style="color:#ef6c00">1.06%</td>
+        <td class="num">0</td>
+        <td class="num">0</td>
+        <td>
+          <span class="badge off">Test budget thấp</span>
+          
+          
+        </td>
+      </tr>
+    
+    </tbody>
+  </table>
+  
+
+  
+  
+  <div class="bottleneck">
+    <h4>🎯 Bottleneck cần tối ưu — 2 điểm</h4>
+    <ul>
+    
+      <li>
+        <span class="stage-name">Cold Click→Form:</span>
+        <span class="val-bad">1.16%</span>
+        <span class="bm-text">(BM 8-12%)</span>
+        → <em>Audit landing page + GG Form (rút gọn trường, headline match ad)</em>
+      </li>
+    
+      <li>
+        <span class="stage-name">Content→Won:</span>
+        <span class="val-bad">0.00%</span>
+        <span class="bm-text">(BM 2-5%)</span>
+        → <em>Nurture email/Zalo sequence cho content lead</em>
+      </li>
+    
+    </ul>
+  </div>
+  
+
+  
+</section>
+
+<section>
+  <h2>7. KAM</h2>
+
+  
+  
+  <h3>A. Hotlead — Full funnel</h3>
+
+  
+  
+  
+  
+  
+
+  
+
+  <div class="vfunnel">
+    
+    <div class="vstage vs1">
+      <div class="vnum">672K</div>
+      <div class="vlabel">SPENT (HOT)</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Spent</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>Σ Amount spent (VND) của tất cả ad thuộc category KAM Hot trong date range</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights endpoint (level=ad)</div>
+          <div class="e-row"><span class="e-label">Raw:</span> 1 ads · tổng 671,960đ</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Spent có thể trùng nếu cùng ad chạy nhiều ngày — Meta tự aggregate, không double-count.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr warn">
+      <span class="ic">▼</span>
+      <span class="rate">CPM 78K</span>
+      <span class="bm">BM 25-50K</span>
+    </div>
+
+    
+    <div class="vstage vs2">
+      <div class="vnum">8,631</div>
+      <div class="vlabel">IMPRESSIONS</div>
+      
+      <details class="metric-explain">
+        <summary>📐 Giải thích Impressions</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>Σ Impressions của tất cả ad KAM Hot</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights</div>
+          <div class="e-row"><span class="e-label">Raw:</span> 8,631 impressions · Reach 0</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Impressions ≠ Reach. 1 user có thể xem ad nhiều lần (Frequency).</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">CTR 0.82%</span>
+      <span class="bm">BM 1.5-2.5%</span>
+    </div>
+
+    
+    <div class="vstage vs3">
+      <div class="vnum">71</div>
+      <div class="vlabel">LINK CLICKS</div>
+      <div class="vsub">CPC 9K</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Link Clicks + CTR</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Clicks:</span> 71 link clicks · CPC trung bình 9,464đ</div>
+          <div class="e-row"><span class="e-label">CTR:</span> 71 clicks / 8,631 impr × 100 = 0.82%</div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> Meta API Insights</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall CTR:</span> Meta dùng &#39;CTR (all)&#39; bao gồm cả click vào page/share — không chỉ link click.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Click→Lead 1.41%</span>
+      <span class="bm">BM 5-10%</span>
+    </div>
+
+    
+    <div class="vstage vs4">
+      <div class="vnum">1</div>
+      <div class="vlabel">TOTAL HOT LEADS</div>
+      <div class="vsub">CPL 672K · Source: csv</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Total Leads + CPL + Click→Lead</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Total Leads:</span> <code>MAX(CSV form leads, User actual input) — pick source có data lớn hơn</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> csv</div>
+          <div class="e-row"><span class="e-label">Breakdown:</span> 1 form (Meta API, user chưa nhập actual)</div>
+          <div class="e-row"><span class="e-label">CPL:</span> 671,960đ / 1 leads = 671,960đ/lead</div>
+          <div class="e-row"><span class="e-label">Click→Lead:</span> 1 leads / 71 clicks = 1.41%</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Nếu CSV &gt; User actual nhiều (&gt;20%), có thể API đếm leads từ ad ngoài focus BU. Check categorize.</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → mở expander Actuals → input Hot Social = số đúng → Generate lại.</div>
+        </div>
+      </details>
+    </div>
+    <div class="varr bad">
+      <span class="ic">▼</span>
+      <span class="rate">Win Rate 0.00%</span>
+      <span class="bm">BM 5-15%</span>
+    </div>
+
+    
+    <div class="vstage vs5">
+      <div class="vnum">0</div>
+      <div class="vlabel">WON (HOT)</div>
+      <div class="vsub">Cost/Won —</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Won + Win Rate</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Won:</span> 0 won deals</div>
+          <div class="e-row"><span class="e-label">Win Rate:</span> 0 won / 1 leads = 0.00%</div>
+          <div class="e-row"><span class="e-label">Cost/Won:</span> Spent / Won = 672K / 0 = —</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> Cần đồng nhất criteria: &#39;won&#39; = ký HĐ + đã thanh toán, hay chỉ pre-commit?</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → expander Actuals → Won Hot.</div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  
+
+  <h4>Chi tiết từng ad Hot — sort theo Leads</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Visual</th>
+        <th>Ad name</th>
+        <th>Adset</th>
+        <th class="num">Spent</th>
+        <th class="num">Impr</th>
+        <th class="num">CPM</th>
+        <th class="num">CTR</th>
+        <th class="num">Clicks</th>
+        <th class="num">CPC</th>
+        <th class="num">Leads</th>
+        <th class="num">Click→Lead</th>
+        <th class="num">CPL</th>
+        <th>Đánh giá</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+      <tr>
+        <td>
+          <span style="color:#bbb;font-size:11px;">—</span>
+        </td>
+        <td><strong>2 loi khi lam JBP</strong></td>
+        <td>Trade Sale MKT</td>
+        <td class="num">672K</td>
+        <td class="num">8,631</td>
+        <td class="num">78K</td>
+        <td class="num" style="color:#ef6c00">1.36%</td>
+        <td class="num">71</td>
+        <td class="num">9K</td>
+        <td class="num">1</td>
+        <td class="num" style="color:#c62828">1.41%</td>
+        <td class="num">672K</td>
+        <td>
+          <span class="badge ok">Giữ</span>
+          
+          
+          
+        </td>
+      </tr>
+    
+    </tbody>
+  </table>
+  
+
+  
+  
+
+  
+  
+  <div class="bottleneck">
+    <h4>🎯 Bottleneck cần tối ưu — 2 điểm</h4>
+    <ul>
+    
+      <li>
+        <span class="stage-name">Hot CTR:</span>
+        <span class="val-bad">0.82%</span>
+        <span class="bm-text">(BM 1.5-2.5%)</span>
+        → <em>Đổi creative/thumbnail</em>
+      </li>
+    
+      <li>
+        <span class="stage-name">Hot Click→Lead:</span>
+        <span class="val-bad">1.41%</span>
+        <span class="bm-text">(BM 5-10%)</span>
+        → <em>Audit Lead Form (số trường, mobile UX)</em>
+      </li>
+    
+    </ul>
+  </div>
+  
+
+  
+</section>
+
+<section>
+  <h2>8. Ecom</h2>
 
   
   
@@ -584,7 +2037,7 @@
   
 
   
-  <div class="critical">Không có ads cho khoá Data trong kỳ này.</div>
+  <div class="critical">Không có ads cho khoá Ecom trong kỳ này.</div>
   
 </section>
 
@@ -602,11 +2055,21 @@
         <th>Chỉ số</th>
         <th>SEA Education benchmark</th>
         
+        <th class="num">AOP</th>
+        
+        <th class="num">Finance</th>
+        
+        <th class="num">Brand</th>
+        
         <th class="num">Trade</th>
         
         <th class="num">RTM</th>
         
         <th class="num">Data</th>
+        
+        <th class="num">KAM</th>
+        
+        <th class="num">Ecom</th>
         
       </tr>
     </thead>
@@ -615,7 +2078,17 @@
         <td><strong>CTR Cold</strong></td>
         <td>1.5 - 2.5%</td>
         
+        <td class="num">—</td>
+        
+        <td class="num">—</td>
+        
+        <td class="num">—</td>
+        
         <td class="num">1.10%</td>
+        
+        <td class="num">2.59%</td>
+        
+        <td class="num">4.08%</td>
         
         <td class="num">—</td>
         
@@ -626,7 +2099,17 @@
         <td><strong>CPC Cold</strong></td>
         <td>3.000 - 5.000đ</td>
         
+        <td class="num">—</td>
+        
+        <td class="num">—</td>
+        
+        <td class="num">—</td>
+        
         <td class="num">2K</td>
+        
+        <td class="num">721</td>
+        
+        <td class="num">682</td>
         
         <td class="num">—</td>
         
@@ -637,7 +2120,17 @@
         <td><strong>Conv Click→Form</strong></td>
         <td>8 - 12%</td>
         
+        <td class="num">0.00%</td>
+        
+        <td class="num">0.00%</td>
+        
+        <td class="num">0.00%</td>
+        
         <td class="num">8.40%</td>
+        
+        <td class="num">0.41%</td>
+        
+        <td class="num">1.16%</td>
         
         <td class="num">0.00%</td>
         
@@ -648,7 +2141,17 @@
         <td><strong>CPL Hot (image)</strong></td>
         <td>50K - 200K</td>
         
-        <td class="num">320K</td>
+        <td class="num">—</td>
+        
+        <td class="num">—</td>
+        
+        <td class="num">—</td>
+        
+        <td class="num">116K</td>
+        
+        <td class="num">44K</td>
+        
+        <td class="num">—</td>
         
         <td class="num">—</td>
         
@@ -662,7 +2165,7 @@
 <section style="text-align:center; background:#2d5a3d; color:white;">
   <p style="font-size:13px; opacity:0.85;">CASK Analytics Hub — Ads Analysis Report</p>
   <p style="font-size:11px; opacity:0.7; margin-top:6px;">
-    3 ads in-scope | 0 ads out-of-scope (Brand/AOP/KAM/Ecom/Finance)
+    18 ads in-scope | 0 ads out-of-scope (Brand/AOP/KAM/Ecom/Finance)
   </p>
 </section>
 

@@ -249,6 +249,46 @@ def analyze_ads(df: pd.DataFrame, actuals: dict | None = None, focus_khoa: list[
         hot_cpl_image = (hot.get("total_spent", 0) / hot_social) if hot_social else 0
         hot_click_to_lead = (hot_social / hot.get("total_clicks", 0) * 100) if hot.get("total_clicks") else 0
 
+        # ====== SINGLE SOURCE OF TRUTH cho leads ======
+        # CSV form leads từ Meta API + user actual input
+        csv_form_hot = int(hot.get("total_results", 0) or 0)
+        # Quy tắc:
+        #   - Nếu user input > 0 và CSV > 0: pick MAX, label rõ breakdown
+        #   - Else: dùng nguồn nào có data
+        if hot_social > 0 and csv_form_hot > 0:
+            if hot_social >= csv_form_hot:
+                total_hot_leads = hot_social
+                leads_source = "user_actual"
+                leads_breakdown = f"{csv_form_hot} form (Meta API) + {hot_social - csv_form_hot} inbox/DM (user tracked)"
+                source_mismatch = False
+            else:
+                # CSV > user input → mismatch nghi vấn
+                total_hot_leads = csv_form_hot  # trust API
+                leads_source = "csv_higher_than_actual"
+                leads_breakdown = f"{csv_form_hot} form (Meta API) · {hot_social} user tracked — lệch {csv_form_hot - hot_social}"
+                source_mismatch = True
+        elif hot_social > 0:
+            total_hot_leads = hot_social
+            leads_source = "user_actual"
+            leads_breakdown = f"{hot_social} user tracked (Meta API không có data form leads)"
+            source_mismatch = False
+        elif csv_form_hot > 0:
+            total_hot_leads = csv_form_hot
+            leads_source = "csv"
+            leads_breakdown = f"{csv_form_hot} form (Meta API, user chưa nhập actual)"
+            source_mismatch = False
+        else:
+            total_hot_leads = 0
+            leads_source = "none"
+            leads_breakdown = "Chưa có data"
+            source_mismatch = False
+
+        # Recompute downstream metrics CONSISTENTLY
+        hot_total_clicks = int(hot.get("total_clicks", 0) or 0)
+        hot_total_spent = float(hot.get("total_spent", 0) or 0)
+        click_to_lead_consistent = (total_hot_leads / hot_total_clicks * 100) if hot_total_clicks else 0
+        cpl_consistent = (hot_total_spent / total_hot_leads) if total_hot_leads else 0
+
         # Won / closed deals
         won_hot = int(act.get("won_hot", 0) or 0)
         won_cold = int(act.get("won_cold", 0) or 0)
@@ -256,9 +296,10 @@ def analyze_ads(df: pd.DataFrame, actuals: dict | None = None, focus_khoa: list[
         won_total = won_hot + won_cold + won_event
         won_paid = won_hot + won_cold  # exclude event (organic/offline)
 
-        win_rate_hot = (won_hot / hot_social * 100) if hot_social else 0
+        # Win rate dùng total_hot_leads (consistent với CR + CPL)
+        win_rate_hot = (won_hot / total_hot_leads * 100) if total_hot_leads else 0
         win_rate_cold = (won_cold / content_lead * 100) if content_lead else 0
-        cost_per_won_hot = (hot.get("total_spent", 0) / won_hot) if won_hot else 0
+        cost_per_won_hot = (hot_total_spent / won_hot) if won_hot else 0
         cost_per_won_cold = (cold.get("total_spent", 0) / won_cold) if won_cold else 0
         cost_per_won_paid = (total_spent / won_paid) if won_paid else 0
 
@@ -305,6 +346,96 @@ def analyze_ads(df: pd.DataFrame, actuals: dict | None = None, focus_khoa: list[
             "cost_per_won_paid": cost_per_won_paid,
             # Bottlenecks
             "bottlenecks": bottlenecks,
+            # ====== Single source of truth ======
+            "total_hot_leads": total_hot_leads,
+            "leads_source": leads_source,
+            "leads_breakdown": leads_breakdown,
+            "source_mismatch": source_mismatch,
+            "click_to_lead_consistent": click_to_lead_consistent,
+            "cpl_consistent": cpl_consistent,
+            "csv_form_hot": csv_form_hot,
+            # ====== Explanation metadata cho từng metric ======
+            "explanations": {
+                "spent_hot": {
+                    "formula": "Σ Amount spent (VND) của tất cả ad thuộc category " + k + " Hot trong date range",
+                    "source": "Meta API Insights endpoint (level=ad)",
+                    "raw": f"{hot.get('n_ads', 0)} ads · tổng {hot_total_spent:,.0f}đ",
+                    "pitfall": "Spent có thể trùng nếu cùng ad chạy nhiều ngày — Meta tự aggregate, không double-count.",
+                },
+                "impressions_hot": {
+                    "formula": "Σ Impressions của tất cả ad " + k + " Hot",
+                    "source": "Meta API Insights",
+                    "raw": f"{hot.get('total_impressions', 0):,} impressions · Reach {hot.get('total_reach', 0):,}",
+                    "pitfall": "Impressions ≠ Reach. 1 user có thể xem ad nhiều lần (Frequency).",
+                },
+                "ctr_hot": {
+                    "formula": "Link clicks / Impressions × 100",
+                    "source": "Derived",
+                    "raw": f"{hot_total_clicks:,} clicks / {hot.get('total_impressions', 0):,} impr × 100 = {hot.get('avg_ctr', 0):.2f}%",
+                    "pitfall": "Meta dùng 'CTR (all)' bao gồm cả click vào page/share — không chỉ link click.",
+                },
+                "clicks_hot": {
+                    "formula": "Σ Link clicks (clicks vào URL trong ad)",
+                    "source": "Meta API Insights",
+                    "raw": f"{hot_total_clicks:,} link clicks · CPC trung bình {hot.get('avg_cpc', 0):,.0f}đ",
+                    "pitfall": "Chỉ đếm 'link_clicks' không phải 'all clicks' (post engagement clicks không tính).",
+                },
+                "click_to_lead_hot": {
+                    "formula": f"Total Leads / Link clicks × 100 = {total_hot_leads} / {hot_total_clicks} × 100",
+                    "source": f"Total Leads từ {leads_source}",
+                    "raw": f"{total_hot_leads} leads / {hot_total_clicks} clicks = {click_to_lead_consistent:.2f}%",
+                    "pitfall": "Nếu CR > 10%, kiểm tra xem có gộp nhầm leads ngoài Meta Lead Form không.",
+                },
+                "total_leads_hot": {
+                    "formula": "MAX(CSV form leads, User actual input) — pick source có data lớn hơn",
+                    "source": leads_source,
+                    "raw": leads_breakdown,
+                    "pitfall": "Nếu CSV > User actual nhiều (>20%), có thể API đếm leads từ ad ngoài focus BU. Check categorize.",
+                },
+                "cpl_hot": {
+                    "formula": "Spent / Total Hot Leads",
+                    "source": "Derived",
+                    "raw": f"{hot_total_spent:,.0f}đ / {total_hot_leads} leads = {cpl_consistent:,.0f}đ/lead",
+                    "pitfall": "CPL tốt cho B2B education SEA: 50K-200K. Nếu < 50K cần check chất lượng lead.",
+                },
+                "win_rate_hot": {
+                    "formula": "Won Hot / Total Hot Leads × 100",
+                    "source": "Derived (Won từ user input)",
+                    "raw": f"{won_hot} won / {total_hot_leads} leads = {win_rate_hot:.2f}%",
+                    "pitfall": "Win rate 5-15% là benchmark B2B education. < 5% cần audit sales follow-up speed.",
+                },
+                "won_hot": {
+                    "formula": "User nhập số deal đã close từ Hot lead",
+                    "source": "User actual input",
+                    "raw": f"{won_hot} won deals",
+                    "pitfall": "Cần đồng nhất criteria: 'won' = ký HĐ + đã thanh toán, hay chỉ pre-commit?",
+                },
+                # Cold lead explanations
+                "spent_cold": {
+                    "formula": "Σ Amount spent của ad " + k + " Cold (BU2 COLD LEAD ad set)",
+                    "source": "Meta API Insights",
+                    "raw": f"{cold.get('n_ads', 0)} ads · tổng {cold.get('total_spent', 0):,.0f}đ",
+                    "pitfall": "Cold lead ad optimize cho link click, không lead → CPL không phải metric chính.",
+                },
+                "ctr_cold": {
+                    "formula": "Link clicks / Impressions × 100",
+                    "source": "Derived",
+                    "raw": f"{cold.get('total_clicks', 0):,} / {cold.get('total_impressions', 0):,} × 100 = {cold.get('avg_ctr', 0):.2f}%",
+                    "pitfall": "Cold lead CTR thường cao hơn Hot vì hook content/freebie hấp dẫn hơn lead form.",
+                },
+                "click_to_form_cold": {
+                    "formula": "Content lead / Cold clicks × 100",
+                    "source": "User input Content lead",
+                    "raw": f"{content_lead} content leads / {cold.get('total_clicks', 0)} clicks = {cold_conv:.2f}%",
+                    "pitfall": "Click→Form < 3% có thể là LP issue HOẶC content không hấp dẫn đủ để commit form.",
+                },
+                "win_rate_cold": {
+                    "formula": "Won Cold / Content lead × 100",
+                    "source": "User input",
+                    "raw": f"{won_cold} won / {content_lead} content = {win_rate_cold:.2f}%",
+                    "pitfall": "Cold→Won 2-5% là benchmark. Cần nurture email/Zalo sequence để tăng.",
+                },
+            },
         }
 
     return {

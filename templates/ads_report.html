@@ -165,6 +165,48 @@
     display: block;
   }
 
+  /* Explainable metrics — collapsible details */
+  details.metric-explain {
+    margin: 4px 0 0; padding: 0; border-radius: 4px;
+    background: rgba(255,255,255,0.08);
+  }
+  details.metric-explain summary {
+    cursor: pointer; font-size: 11px;
+    padding: 4px 8px; opacity: 0.85;
+    list-style: none; user-select: none;
+  }
+  details.metric-explain summary:hover { opacity: 1; background: rgba(255,255,255,0.05); }
+  details.metric-explain summary::-webkit-details-marker { display: none; }
+  details.metric-explain summary::before { content: "▶ "; font-size: 9px; }
+  details.metric-explain[open] summary::before { content: "▼ "; }
+  details.metric-explain .explain-body {
+    padding: 10px 14px; background: #fff; color: #333;
+    border-radius: 4px; margin: 4px;
+    font-size: 12px; line-height: 1.5;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  }
+  details.metric-explain .explain-body .e-row { padding: 4px 0; }
+  details.metric-explain .explain-body .e-label {
+    font-weight: 700; color: #2d5a3d; display: inline-block;
+    min-width: 90px;
+  }
+  details.metric-explain .explain-body code {
+    background: #f0f4f0; padding: 1px 5px; border-radius: 3px;
+    font-size: 11px; color: #1f4029;
+  }
+  details.metric-explain.pitfall .e-row.pf {
+    background: #fff8e1; padding: 6px 8px; border-radius: 4px;
+    border-left: 3px solid #f9c23c; margin-top: 6px;
+  }
+
+  /* Source mismatch warning */
+  .src-mismatch {
+    background: #fff3e0; border-left: 4px solid #ef6c00;
+    color: #5d4037; padding: 8px 12px; border-radius: 4px;
+    font-size: 12px; margin: 8px 0;
+  }
+  .src-mismatch strong { color: #bf360c; }
+
   /* Bottleneck table */
   .bottleneck {
     background: #fff3e0; border-left: 4px solid #ef6c00;
@@ -251,17 +293,33 @@
   {% if k.hot.n_ads > 0 %}
   <h3>A. Hotlead — Full funnel</h3>
 
-  {% set cr_impr_click = k.hot.avg_ctr %}
-  {% set cr_click_lead = k.hot.click_to_result_cr %}
-  {% set leads_display = k.hot_social_actual if k.hot_social_actual else k.hot.total_results %}
-  {% set won_display = k.won_hot %}
+  {# CONSISTENT source of truth — dùng total_hot_leads cho cả CR + CPL + Win rate #}
+  {% set total_leads = k.total_hot_leads %}
+  {% set click_to_lead = k.click_to_lead_consistent %}
+  {% set cpl = k.cpl_consistent %}
   {% set win_rate = k.win_rate_hot %}
+
+  {% if k.source_mismatch %}
+  <div class="src-mismatch">
+    <strong>⚠️ Source mismatch:</strong> {{ k.leads_breakdown }}.
+    Có thể API gộp data ad ngoài focus BU — kiểm tra phần Categorization. Đã dùng CSV (cao hơn) làm baseline.
+  </div>
+  {% endif %}
 
   <div class="vfunnel">
     {# Stage 1: SPENT #}
     <div class="vstage vs1">
       <div class="vnum">{{ k.hot.total_spent|fmt_money }}</div>
       <div class="vlabel">SPENT (HOT)</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Spent</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>{{ k.explanations.spent_hot.formula }}</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> {{ k.explanations.spent_hot.source }}</div>
+          <div class="e-row"><span class="e-label">Raw:</span> {{ k.explanations.spent_hot.raw }}</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> {{ k.explanations.spent_hot.pitfall }}</div>
+        </div>
+      </details>
     </div>
     <div class="varr {% if k.hot.avg_cpm <= 50000 %}good{% elif k.hot.avg_cpm <= 150000 %}warn{% else %}bad{% endif %}">
       <span class="ic">▼</span>
@@ -274,10 +332,19 @@
       <div class="vnum">{{ k.hot.total_impressions|fmt_int }}</div>
       <div class="vlabel">IMPRESSIONS</div>
       {% if k.hot.total_reach %}<div class="vsub">Reach {{ k.hot.total_reach|fmt_int }} · Freq {{ k.hot.avg_frequency|fmt_pct(1) }}</div>{% endif %}
+      <details class="metric-explain">
+        <summary>📐 Giải thích Impressions</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Công thức:</span> <code>{{ k.explanations.impressions_hot.formula }}</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> {{ k.explanations.impressions_hot.source }}</div>
+          <div class="e-row"><span class="e-label">Raw:</span> {{ k.explanations.impressions_hot.raw }}</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> {{ k.explanations.impressions_hot.pitfall }}</div>
+        </div>
+      </details>
     </div>
-    <div class="varr {% if cr_impr_click >= 1.5 %}good{% elif cr_impr_click >= 1.0 %}warn{% else %}bad{% endif %}">
+    <div class="varr {% if k.hot.avg_ctr >= 1.5 %}good{% elif k.hot.avg_ctr >= 1.0 %}warn{% else %}bad{% endif %}">
       <span class="ic">▼</span>
-      <span class="rate">CTR {{ cr_impr_click|fmt_pct }}</span>
+      <span class="rate">CTR {{ k.hot.avg_ctr|fmt_pct }}</span>
       <span class="bm">BM 1.5-2.5%</span>
     </div>
 
@@ -286,18 +353,39 @@
       <div class="vnum">{{ k.hot.total_clicks|fmt_int }}</div>
       <div class="vlabel">LINK CLICKS</div>
       <div class="vsub">CPC {{ k.hot.avg_cpc|fmt_money }}</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Link Clicks + CTR</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Clicks:</span> {{ k.explanations.clicks_hot.raw }}</div>
+          <div class="e-row"><span class="e-label">CTR:</span> {{ k.explanations.ctr_hot.raw }}</div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> {{ k.explanations.clicks_hot.source }}</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall CTR:</span> {{ k.explanations.ctr_hot.pitfall }}</div>
+        </div>
+      </details>
     </div>
-    <div class="varr {% if cr_click_lead >= 5 %}good{% elif cr_click_lead >= 3 %}warn{% else %}bad{% endif %}">
+    <div class="varr {% if click_to_lead >= 5 %}good{% elif click_to_lead >= 3 %}warn{% else %}bad{% endif %}">
       <span class="ic">▼</span>
-      <span class="rate">Click→Lead {{ cr_click_lead|fmt_pct }}</span>
+      <span class="rate">Click→Lead {{ click_to_lead|fmt_pct }}</span>
       <span class="bm">BM 5-10%</span>
     </div>
 
-    {# Stage 4: LEADS #}
+    {# Stage 4: TOTAL LEADS (consistent) #}
     <div class="vstage vs4">
-      <div class="vnum">{{ leads_display }}</div>
-      <div class="vlabel">{% if k.hot_social_actual %}TOTAL LEADS{% else %}FORM LEADS{% endif %}</div>
-      <div class="vsub">CPL {% if k.hot_cpl_image %}{{ k.hot_cpl_image|fmt_money }}{% elif k.hot.cpl_csv %}{{ k.hot.cpl_csv|fmt_money }}{% else %}—{% endif %}{% if k.hot_social_actual and k.csv_leads_vs_image_diff %} · {{ k.hot.total_results }} form + {{ k.csv_leads_vs_image_diff }} inbox{% endif %}</div>
+      <div class="vnum">{{ total_leads }}</div>
+      <div class="vlabel">TOTAL HOT LEADS</div>
+      <div class="vsub">CPL {% if cpl %}{{ cpl|fmt_money }}{% else %}—{% endif %} · Source: {{ k.leads_source }}</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Total Leads + CPL + Click→Lead</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Total Leads:</span> <code>{{ k.explanations.total_leads_hot.formula }}</code></div>
+          <div class="e-row"><span class="e-label">Nguồn:</span> {{ k.explanations.total_leads_hot.source }}</div>
+          <div class="e-row"><span class="e-label">Breakdown:</span> {{ k.leads_breakdown }}</div>
+          <div class="e-row"><span class="e-label">CPL:</span> {{ k.explanations.cpl_hot.raw }}</div>
+          <div class="e-row"><span class="e-label">Click→Lead:</span> {{ k.explanations.click_to_lead_hot.raw }}</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> {{ k.explanations.total_leads_hot.pitfall }}</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → mở expander Actuals → input Hot Social = số đúng → Generate lại.</div>
+        </div>
+      </details>
     </div>
     <div class="varr {% if win_rate >= 10 %}good{% elif win_rate >= 5 %}warn{% else %}bad{% endif %}">
       <span class="ic">▼</span>
@@ -307,9 +395,19 @@
 
     {# Stage 5: WON #}
     <div class="vstage vs5">
-      <div class="vnum">{{ won_display }}</div>
+      <div class="vnum">{{ k.won_hot }}</div>
       <div class="vlabel">WON (HOT)</div>
       <div class="vsub">Cost/Won {% if k.cost_per_won_hot %}{{ k.cost_per_won_hot|fmt_money }}{% else %}—{% endif %}</div>
+      <details class="metric-explain">
+        <summary>📐 Giải thích Won + Win Rate</summary>
+        <div class="explain-body">
+          <div class="e-row"><span class="e-label">Won:</span> {{ k.explanations.won_hot.raw }}</div>
+          <div class="e-row"><span class="e-label">Win Rate:</span> {{ k.explanations.win_rate_hot.raw }}</div>
+          <div class="e-row"><span class="e-label">Cost/Won:</span> Spent / Won = {{ k.hot.total_spent|fmt_money }} / {{ k.won_hot }} = {% if k.cost_per_won_hot %}{{ k.cost_per_won_hot|fmt_money }}{% else %}—{% endif %}</div>
+          <div class="e-row pf"><span class="e-label">⚠️ Pitfall:</span> {{ k.explanations.won_hot.pitfall }}</div>
+          <div class="e-row pf" style="background:#e3f2fd; border-color:#2196f3;"><span class="e-label">✏️ Sửa số:</span> Vào tab Báo cáo → expander Actuals → Won Hot.</div>
+        </div>
+      </details>
     </div>
   </div>
 
