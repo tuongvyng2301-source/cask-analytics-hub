@@ -17,7 +17,7 @@ import pandas as pd
 import streamlit as st
 
 from skills.bu_config import BU_CONFIG, ALL_KHOA, filter_khoa_by_bu
-from skills.ads_analysis import analyze_ads, render_ads_report
+from skills.ads_analysis import analyze_ads, render_ads_report, normalize_ads_columns
 from skills.organic_analysis import analyze_organic, find_ambiguous_posts, categorize_dataframe, list_all_posts_with_category
 from skills.lead_quality import analyze_leads
 from skills.meta_api import fetch_ad_creative, verify_token, fetch_ads_insights, insights_to_dataframe_dict, MetaAPIError, exchange_for_long_lived_token
@@ -505,9 +505,30 @@ def page_home():
         elif ads_file:
             try:
                 ads_file.seek(0)
-                df_ads = pd.read_csv(ads_file)
+                # Auto-detect encoding (Meta exports often UTF-8 with BOM)
+                df_ads = None
+                for enc in ("utf-8-sig", "utf-8", "utf-16", "cp1258", "latin-1"):
+                    try:
+                        ads_file.seek(0)
+                        df_ads = pd.read_csv(ads_file, encoding=enc)
+                        break
+                    except (UnicodeDecodeError, UnicodeError):
+                        continue
+                if df_ads is None:
+                    st.error("❌ Không đọc được file CSV (encoding không hỗ trợ). Mở Excel save lại dạng 'CSV UTF-8' rồi upload lại.")
+                    return
+                # Normalize column names (strip BOM, case, whitespace, map aliases)
+                df_ads = normalize_ads_columns(df_ads)
+
                 if "Campaign name" not in df_ads.columns:
-                    st.error("❌ File Ads CSV thiếu cột `Campaign name`. Kiểm tra xem có phải upload nhầm file Facebook posts không?")
+                    st.error(
+                        f"❌ File Ads CSV thiếu cột **Campaign name** (đã thử match alias + case-insensitive).\n\n"
+                        f"**Cột hiện có trong file của bạn**: `{', '.join(df_ads.columns[:15])}{'...' if len(df_ads.columns) > 15 else ''}`\n\n"
+                        f"Có thể:\n"
+                        f"- File này không phải Meta Ads export (vd upload nhầm Facebook posts CSV)\n"
+                        f"- Tên cột bị customize → đổi lại thành `Campaign name` trong Excel\n"
+                        f"- Báo tôi để add alias cho tên cột bạn đang dùng"
+                    )
                     return
             except Exception as e:
                 st.error(f"Lỗi parse Ads CSV: {e}")

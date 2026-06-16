@@ -21,6 +21,87 @@ CATEGORIES_COLD = ["Trade Cold", "RTM Cold", "Data Cold", "AOP Cold", "Finance C
 CATEGORIES = CATEGORIES_HOT + CATEGORIES_COLD
 
 
+# Common column name aliases — Meta Ads Manager exports vary by language/version
+COLUMN_ALIASES = {
+    "campaign name": "Campaign name",
+    "campaign_name": "Campaign name",
+    "campaign": "Campaign name",
+    "tên chiến dịch": "Campaign name",  # Vietnamese
+    "ad set name": "Ad set name",
+    "adset name": "Ad set name",
+    "ad_set_name": "Ad set name",
+    "tên nhóm quảng cáo": "Ad set name",
+    "ad name": "Ad name",
+    "ad_name": "Ad name",
+    "adname": "Ad name",
+    "tên quảng cáo": "Ad name",
+    "ad id": "Ad ID",
+    "ad_id": "Ad ID",
+    "adid": "Ad ID",
+    "id quảng cáo": "Ad ID",
+    "result type": "Result type",
+    "result_type": "Result type",
+    "results": "Results",
+    "kết quả": "Results",
+    "cost per result": "Cost per result",
+    "cost_per_result": "Cost per result",
+    "chi phí trên mỗi kết quả": "Cost per result",
+    "amount spent (vnd)": "Amount spent (VND)",
+    "amount spent (usd)": "Amount spent (VND)",
+    "amount spent": "Amount spent (VND)",
+    "amount_spent": "Amount spent (VND)",
+    "spend": "Amount spent (VND)",
+    "số tiền đã chi": "Amount spent (VND)",
+    "số tiền đã chi (vnd)": "Amount spent (VND)",
+    "link clicks": "Link clicks",
+    "link_clicks": "Link clicks",
+    "lượt nhấp vào liên kết": "Link clicks",
+    "ctr (all)": "CTR (all)",
+    "ctr": "CTR (all)",
+    "ctr (link click-through rate)": "CTR (all)",
+    "ctr (tỉ lệ nhấp qua liên kết)": "CTR (all)",
+    "ctr (tất cả)": "CTR (all)",
+    "impressions": "Impressions",
+    "lượt hiển thị": "Impressions",
+    "reach": "Reach",
+    "số người tiếp cận": "Reach",
+    "phạm vi tiếp cận": "Reach",
+    "frequency": "Frequency",
+    "tần suất": "Frequency",
+    "video plays at 50%": "Video plays at 50%",
+    "lượt phát video ở mức 50%": "Video plays at 50%",
+    "reporting starts": "Reporting starts",
+    "reporting ends": "Reporting ends",
+    "results (initial)": "Results (initial)",
+}
+
+
+def normalize_ads_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalize Meta Ads CSV column names.
+
+    Fixes:
+    - BOM (Byte Order Mark) character at start of first column
+    - Whitespace variations (leading/trailing/multiple spaces)
+    - Case differences (Campaign name vs Campaign Name vs CAMPAIGN NAME)
+    - Quoted column names with extra quotes
+    - Vietnamese column names (if user exported in VN locale)
+    """
+    df = df.copy()
+    new_cols = []
+    for c in df.columns:
+        # Strip BOM (﻿) which appears at start of UTF-8 BOM files
+        cleaned = str(c).lstrip("﻿").strip()
+        # Strip surrounding quotes if any
+        cleaned = cleaned.strip('"').strip("'").strip()
+        # Collapse multiple internal whitespace
+        cleaned = " ".join(cleaned.split())
+        # Map via alias dict (case-insensitive)
+        canonical = COLUMN_ALIASES.get(cleaned.lower(), cleaned)
+        new_cols.append(canonical)
+    df.columns = new_cols
+    return df
+
+
 def categorize_ad(campaign: str, adset: str) -> str | None:
     """Return category label or None if out of scope."""
     campaign = str(campaign or "")
